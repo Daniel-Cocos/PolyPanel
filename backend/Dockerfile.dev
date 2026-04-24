@@ -1,0 +1,11 @@
+FROM amazoncorretto:17-alpine
+
+WORKDIR /workspace
+
+RUN apk add --no-cache maven
+
+COPY pom.xml .
+
+RUN mvn dependency:go-offline -B
+
+CMD ["mvn", "spring-boot:run"]

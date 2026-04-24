@@ -1,2 +1,2 @@
 # GreenTech
-Green Tech
+GreenTech

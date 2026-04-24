@@ -1,8 +1,6 @@
-FROM amazoncorretto:17-alpine
+FROM maven:3.9.11-eclipse-temurin-25-alpine
 
 WORKDIR /workspace
-
-RUN apk add --no-cache maven
 
 COPY pom.xml .
 

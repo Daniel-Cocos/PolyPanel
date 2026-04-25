@@ -39,6 +39,6 @@ npm run deploy
 
 The current scope includes React Router setup, a dedicated `src/pages/LandingPage.tsx` page, a new `src/pages/DashboardPage.tsx` route, section components under `src/components/LandingPage/`, a dashboard solar planner under `src/components/SolarPannel/`, a fullscreen hero with a dashboard CTA, a simplified 3-tier pricing section with optional comparison details, a market-problem section, a founder-led why-us section, MUI-driven layouts, Google-font typography, lightweight Framer Motion reveals, and GSAP-powered hero and scroll-driven section polish.
 
-The solar planner uses a no-signup bird's-eye imagery source for lightweight layout sketching, includes address autocomplete to jump the map to a searched location, and does not require any local API token.
+The solar planner now runs as a full-page split workspace with a compact left sidebar, a minimal modal step to optionally choose an address before drawing the farm boundary, a saved-farm label based on the farm center coordinates, selected-panel details in their own left-side box, and constraints that keep the map and panel placement scoped to the selected farm area without any local API token.
 
 This frontend is configured for GitHub Pages project-site deployment under `/GreenTech/`. Run `npm run deploy` from `frontend/` to publish the built `dist/` output to the repository `gh-pages` branch. The build also writes `dist/404.html` from `dist/index.html` so direct navigation to client-side routes keeps working on GitHub Pages.

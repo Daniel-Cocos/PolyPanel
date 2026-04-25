@@ -108,7 +108,14 @@ function HeroSection() {
             borderRadius: '3px',
           }}
         >
-          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <Stack
+            direction="row"
+            sx={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              minHeight: { xs: 40, md: 'auto' },
+            }}
+          >
             <Link
               href="#top"
               underline="none"
@@ -119,7 +126,9 @@ function HeroSection() {
                 textTransform: 'uppercase',
                 display: 'inline-flex',
                 alignItems: 'center',
+                minHeight: { xs: 40, md: 'auto' },
                 gap: 1,
+                lineHeight: 1,
               }}
             >
               <Box
@@ -143,7 +152,7 @@ function HeroSection() {
                   },
                 }}
               />
-              GreenTech
+              PolyPannel
             </Link>
 
             <IconButton
@@ -152,8 +161,15 @@ function HeroSection() {
               sx={{
                 display: { xs: 'inline-flex', md: 'none' },
                 color: 'common.white',
-                border: '1px solid rgba(255,255,255,0.16)',
-                borderRadius: '3px',
+                width: 40,
+                height: 40,
+                p: 0,
+                border: 'none',
+                borderRadius: 0,
+                backgroundColor: 'transparent',
+                '&:hover': {
+                  backgroundColor: 'transparent',
+                },
               }}
             >
               {isMobileNavOpen ? <FiX size={18} /> : <FiMenu size={18} />}

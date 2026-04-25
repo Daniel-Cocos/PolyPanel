@@ -1,4 +1,4 @@
-# GreenTech Frontend
+# PolyPannel Frontend
 
 Frontend for a dual land-use company focused on stacked solar in the UK. The immediate goal is a clear landing page that explains how solar mounted above polytunnels can unlock more resilient farming, new generation capacity, and a planning story that works better for communities, councils, and network-constrained energy developers.
 
@@ -38,4 +38,4 @@ npm run deploy
 
 The current landing page scope includes React Router setup, a dedicated `src/pages/LandingPage.tsx` page, section components under `src/components/LandingPage/`, a fullscreen hero, a 3-tier pricing section, MUI-driven layouts, Google-font typography, lightweight Framer Motion reveals, and GSAP-powered hero and scroll-driven section polish.
 
-This frontend is configured for GitHub Pages project-site deployment under `/GreenTech/`. Run `npm run deploy` from `frontend/` to publish the built `dist/` output to the repository `gh-pages` branch. The build also writes `dist/404.html` from `dist/index.html` so direct navigation to client-side routes keeps working on GitHub Pages.
+This frontend is configured for GitHub Pages project-site deployment under `/PolyPannel/`. Run `npm run deploy` from `frontend/` to publish the built `dist/` output to the repository `gh-pages` branch. The build also writes `dist/404.html` from `dist/index.html` so direct navigation to client-side routes keeps working on GitHub Pages.

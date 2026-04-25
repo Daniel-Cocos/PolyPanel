@@ -31,7 +31,7 @@ function BenefitsSection() {
         <Reveal sx={{ display: 'grid', gap: 5 }}>
           <Box sx={{ display: 'grid', gap: 2, maxWidth: 900 }}>
             <Chip
-              label="Why GreenTech"
+              label="Why PolyPannel"
               sx={{
                 justifySelf: 'start',
                 fontWeight: 600,

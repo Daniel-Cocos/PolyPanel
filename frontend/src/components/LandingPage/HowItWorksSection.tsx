@@ -1,73 +1,78 @@
-import { motion, useReducedMotion } from 'framer-motion'
-import { Box, Chip, Container, Paper, Typography } from '@mui/material'
-import { FiLayers, FiShield, FiSun } from 'react-icons/fi'
+import { Box, Chip, Container, Typography } from '@mui/material'
+import { FiFileText, FiSearch, FiSun } from 'react-icons/fi'
 import Reveal from './Reveal'
-
-const MotionPaper = motion(Paper)
 
 const steps = [
   {
-    title: 'Protect the agricultural layer',
-    copy: 'Polytunnels continue supporting high-value crops, season extension, and more consistent growing conditions.',
-    icon: FiLayers,
+    title: '1. Screen land quickly',
+    copy: 'Check agricultural fit, grid access, and basic constraints.',
+    icon: FiSearch,
   },
   {
-    title: 'Introduce solar above existing structure',
-    copy: 'Generation is added as an upper layer so the site gains value without becoming single-use infrastructure.',
+    title: '2. Build the planning case',
+    copy: 'Frame one clear story for councils, communities, and partners.',
+    icon: FiFileText,
+  },
+  {
+    title: '3. Move into delivery',
+    copy: 'Align scope, governance, and rollout priorities.',
     icon: FiSun,
-  },
-  {
-    title: 'Carry one joined-up planning story',
-    copy: 'Growers, developers, councils, and communities can align around productivity, resilience, and local value.',
-    icon: FiShield,
   },
 ]
 
-const itemEase = [0.22, 1, 0.36, 1] as const
-
 /** Explains the stacked solar model in three steps. */
 function HowItWorksSection() {
-  const shouldReduceMotion = useReducedMotion()
-
   return (
-    <Box component="section" id="how-it-works" sx={{ py: { xs: 10, md: 14 }, bgcolor: '#f8fbfa' }}>
+    <Box component="section" id="how-it-works" sx={{ py: { xs: 10, md: 14 }, bgcolor: '#08151d', color: 'common.white' }}>
       <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 48px))' }}>
-        <Reveal sx={{ display: 'grid', gap: 5 }}>
-          <Box sx={{ maxWidth: 820, display: 'grid', gap: 2 }}>
-            <Chip label="How it works" sx={{ justifySelf: 'start', fontWeight: 600 }} />
-            <Typography variant="h2" sx={{ fontSize: { xs: '2rem', md: '3.2rem' }, lineHeight: 1.03 }}>
-              One site. Two productive layers. A practical model for UK deployment.
+        <Reveal sx={{ display: 'grid', gap: 4 }}>
+          <Box sx={{ maxWidth: 820, display: 'grid', gap: 1.8 }}>
+            <Chip
+              label="How it works"
+              sx={{
+                justifySelf: 'start',
+                fontWeight: 700,
+                color: 'rgba(255,255,255,0.9)',
+                border: '1px solid rgba(255,255,255,0.16)',
+                bgcolor: 'rgba(255,255,255,0.08)',
+              }}
+            />
+            <Typography variant="h2" sx={{ fontSize: { xs: '2rem', md: '3.2rem' }, lineHeight: 1.01, color: 'common.white' }}>
+              Three steps. One deployable model.
             </Typography>
-            <Typography sx={{ color: 'text.secondary', maxWidth: '62ch' }}>
-              The structure is simple enough for boardrooms and credible enough for planning conversations.
+            <Typography sx={{ color: 'rgba(232,245,249,0.78)', maxWidth: '54ch' }}>
+              Built for energy teams working with farmers.
             </Typography>
           </Box>
 
-          <Box component="ol" sx={{ m: 0, p: 0, listStyle: 'none', display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' }, gap: 2.5 }}>
-            {steps.map((step, index) => {
+          <Box component="ol" data-gsap-card-group sx={{ m: 0, p: 0, listStyle: 'none', display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' }, gap: 2.5 }}>
+            {steps.map((step) => {
               const Icon = step.icon
 
               return (
                 <Box component="li" key={step.title} sx={{ listStyle: 'none' }}>
-                  <MotionPaper
-                    variant="outlined"
-                    initial={shouldReduceMotion ? undefined : { opacity: 0, y: 20 }}
-                    whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.4 }}
-                    transition={shouldReduceMotion ? undefined : { duration: 0.5, delay: index * 0.08, ease: itemEase }}
-                    sx={{ p: 3, borderRadius: 3 }}
+                  <Box
+                    data-gsap-card
+                    sx={{
+                      pt: 1.8,
+                      px: { xs: 2, md: 2.2 },
+                      pb: { xs: 2.2, md: 2.4 },
+                      borderRadius: '20px',
+                      border: '1px solid rgba(255,255,255,0.14)',
+                      bgcolor: 'rgba(7,18,27,0.72)',
+                      backdropFilter: 'blur(14px)',
+                      boxShadow: '0 28px 60px rgba(1, 9, 14, 0.22)',
+                    }}
                   >
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.75 }}>
-                      <Chip label={`0${index + 1}`} size="small" variant="outlined" sx={{ minWidth: 46 }} />
-                      <Box sx={{ width: 36, height: 36, borderRadius: '50%', border: '1px solid', borderColor: 'divider', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: 'text.primary' }}>
-                        <Icon size={16} />
-                      </Box>
+                    <Box data-gsap-divider sx={{ height: 2, bgcolor: 'secondary.main', mb: 1.8, borderRadius: '999px' }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.8 }}>
+                      <Icon size={16} color="currentColor" />
+                      <Typography variant="h6" sx={{ fontSize: '1.2rem', color: 'common.white' }}>
+                        {step.title}
+                      </Typography>
                     </Box>
-                    <Typography variant="h6" sx={{ fontSize: '1.2rem', mb: 1.25 }}>
-                      {step.title}
-                    </Typography>
-                    <Typography sx={{ color: 'text.secondary' }}>{step.copy}</Typography>
-                  </MotionPaper>
+                    <Typography sx={{ color: 'rgba(232,245,249,0.78)' }}>{step.copy}</Typography>
+                  </Box>
                 </Box>
               )
             })}

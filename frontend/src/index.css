@@ -17,10 +17,16 @@ body,
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   min-width: 320px;
-  background: #eef4f1;
+  background:
+    radial-gradient(circle at top, rgba(73, 200, 137, 0.12), transparent 28%),
+    linear-gradient(180deg, #eef4f1 0%, #f7fbf9 100%);
 }
 
 a {

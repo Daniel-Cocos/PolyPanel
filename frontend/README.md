@@ -14,7 +14,8 @@ This first version is intentionally focused on message clarity rather than produ
 - Build the interface with MUI components and theme tokens so sections stay consistent and easier to maintain.
 - Use Google Fonts for a stronger typographic voice (Space Grotesk for headings and Source Sans 3 for body copy).
 - Lead with a fullscreen image-driven hero section that immediately positions the company as a credible partner for growers, developers, and planning stakeholders.
-- Use subtle Framer Motion transitions to improve hierarchy and polish without adding heavy or distracting animation.
+- Use a hybrid motion stack: Framer Motion for lightweight content reveals and GSAP for premium hero and section choreography.
+- Keep the homepage concise and conversion-focused with a clear pricing section for energy developers.
 - Use a simple `mailto:` contact action for now so the site can launch before a full contact workflow exists.
 
 ## Local Development
@@ -32,6 +33,9 @@ Useful scripts:
 npm run build
 npm run lint
 npm run preview
+npm run deploy
 ```
 
-The current landing page scope includes React Router setup, a dedicated `src/pages/LandingPage.tsx` page, section components under `src/components/LandingPage/`, a fullscreen hero, MUI-driven section layouts, Google-font typography, and subtle Framer Motion reveals.
+The current landing page scope includes React Router setup, a dedicated `src/pages/LandingPage.tsx` page, section components under `src/components/LandingPage/`, a fullscreen hero, a 3-tier pricing section, MUI-driven layouts, Google-font typography, lightweight Framer Motion reveals, and GSAP-powered hero and scroll-driven section polish.
+
+This frontend is configured for GitHub Pages project-site deployment under `/GreenTech/`. Run `npm run deploy` from `frontend/` to publish the built `dist/` output to the repository `gh-pages` branch. The build also writes `dist/404.html` from `dist/index.html` so direct navigation to client-side routes keeps working on GitHub Pages.

@@ -1,12 +1,9 @@
-import { motion, useReducedMotion } from 'framer-motion'
-import { Box, Button, Chip, Container, Link, Paper, Typography } from '@mui/material'
+import { useReducedMotion } from 'framer-motion'
+import { Box, Button, Chip, Container, Link, Typography } from '@mui/material'
 import Reveal from './Reveal'
 
 const emailHref = 'mailto:hello@yourcompany.co.uk?subject=Stacked%20solar%20enquiry'
 const phoneHref = 'tel:+442012345678'
-
-const MotionPaper = motion(Paper)
-const hoverEase = [0.22, 1, 0.36, 1] as const
 
 /** Creates the standout contact call-to-action section. */
 function ContactCTASection() {
@@ -16,27 +13,20 @@ function ContactCTASection() {
     <Box component="section" id="contact" sx={{ py: { xs: 10, md: 14 }, bgcolor: '#08151d' }}>
       <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 48px))' }}>
         <Reveal>
-          <MotionPaper
-            variant="outlined"
-            initial={shouldReduceMotion ? undefined : { opacity: 0, y: 18 }}
-            whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
-            transition={shouldReduceMotion ? undefined : { duration: 0.55, ease: hoverEase }}
+          <Box
             sx={{
-              p: { xs: 3, md: 4.5 },
-              borderRadius: 4,
-              borderColor: 'rgba(255,255,255,0.14)',
-              bgcolor: 'rgba(255,255,255,0.04)',
+              py: { xs: 2, md: 3 },
               color: 'common.white',
               display: 'grid',
               gap: 2,
-              textAlign: { xs: 'left', md: 'center' },
+              textAlign: 'center',
+              justifyItems: 'center',
             }}
           >
             <Chip
-              label="Contact"
+              label="Contact Us"
               sx={{
-                justifySelf: { xs: 'start', md: 'center' },
+                justifySelf: 'center',
                 color: 'rgba(255,255,255,0.9)',
                 border: '1px solid rgba(255,255,255,0.2)',
                 bgcolor: 'rgba(255,255,255,0.06)',
@@ -54,13 +44,14 @@ function ContactCTASection() {
             <Button
               variant="contained"
               href={emailHref}
+              data-gsap-cta-button={!shouldReduceMotion ? true : undefined}
               sx={{
-                justifySelf: { xs: 'start', md: 'center' },
+                justifySelf: 'center',
                 bgcolor: '#49c889',
                 color: '#042018',
                 px: { xs: 2.5, md: 4 },
                 minHeight: 58,
-                borderRadius: 3,
+                borderRadius: '3px',
                 fontSize: { xs: '1rem', md: '1.18rem' },
                 '&:hover': { bgcolor: '#35b576' },
               }}
@@ -74,7 +65,7 @@ function ContactCTASection() {
                 +44 (0)20 1234 5678
               </Link>
             </Typography>
-          </MotionPaper>
+          </Box>
         </Reveal>
       </Container>
     </Box>

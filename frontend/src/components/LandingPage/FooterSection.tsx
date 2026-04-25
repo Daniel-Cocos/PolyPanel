@@ -27,7 +27,13 @@ function FooterSection() {
 
           <Stack direction="row" spacing={{ xs: 2, md: 3 }}>
             {footerLinks.map((link) => (
-              <Link key={link.label} href={link.href} underline="none" sx={{ color: 'rgba(232,245,249,0.78)', '&:hover': { color: 'common.white' } }}>
+              <Link
+                key={link.label}
+                href={link.href}
+                underline="none"
+                data-gsap-footer-link
+                sx={{ color: 'rgba(232,245,249,0.78)', '&:hover': { color: 'common.white' } }}
+              >
                 {link.label}
               </Link>
             ))}

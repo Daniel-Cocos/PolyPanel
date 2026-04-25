@@ -153,28 +153,41 @@ function PricingSection() {
                   <Typography sx={{ color: 'rgba(232,245,249,0.82)', mb: 1.6 }}>{tier.summary}</Typography>
 
                   <Stack component="ul" spacing={0.85} sx={{ m: 0, pl: 0, mb: 2.2, listStyle: 'none' }}>
-                      {tier.features.map((feature) => (
-                        <Stack
-                          component="li"
-                          key={feature}
-                          direction="row"
-                          spacing={0.75}
-                          sx={{ alignItems: 'flex-start', color: 'rgba(232,245,249,0.82)', listStyle: 'none', mb: 0.5 }}
+                    {tier.features.map((feature) => (
+                      <Stack
+                        component="li"
+                        key={feature}
+                        direction="row"
+                        spacing={0.75}
+                        sx={{
+                          alignItems: 'baseline',
+                          color: 'rgba(232,245,249,0.82)',
+                          listStyle: 'none',
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            color: isFeatured ? 'secondary.main' : 'secondary.light',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                          }}
                         >
-                          <Box sx={{ color: isFeatured ? 'secondary.main' : 'secondary.light', display: 'inline-flex', mt: '0.15em', flexShrink: 0 }}>
-                            <FiCheckCircle size={12} />
-                          </Box>
-                          <Typography
-                            component="span"
-                            sx={{
-                              color: 'rgba(232,245,249,0.82)',
-                              lineHeight: 1.4,
-                            }}
-                          >
-                            {feature}
-                          </Typography>
-                        </Stack>
-                      ))}
+                          <FiCheckCircle size={12} />
+                        </Box>
+                        <Typography
+                          component="span"
+                          sx={{
+                            color: 'rgba(232,245,249,0.82)',
+                            lineHeight: 1.4,
+                            minWidth: 0,
+                          }}
+                        >
+                          {feature}
+                        </Typography>
+                      </Stack>
+                    ))}
                   </Stack>
 
                   <Button

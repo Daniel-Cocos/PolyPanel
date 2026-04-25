@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
-import { Box, Button, Chip, Container, Link, Stack, Typography } from '@mui/material'
-import { FiClock, FiMapPin, FiSun } from 'react-icons/fi'
+import { Box, Button, Chip, Collapse, Container, IconButton, Link, Stack, Typography } from '@mui/material'
+import { FiClock, FiMapPin, FiMenu, FiSun, FiX } from 'react-icons/fi'
 import heroImage from '../../assets/pexels-red-zeppelin-4148472.jpg'
 import { gsap } from '../../lib/gsap'
 
@@ -23,6 +23,7 @@ const impactItems = [
 function HeroSection() {
   const shouldReduceMotion = useReducedMotion()
   const sectionRef = useRef<HTMLElement | null>(null)
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
 
   useEffect(() => {
     const section = sectionRef.current
@@ -97,11 +98,8 @@ function HeroSection() {
       >
         <Stack
           data-gsap-hero-nav
-          direction={{ xs: 'column', md: 'row' }}
           spacing={{ xs: 1.2, md: 2 }}
           sx={{
-            justifyContent: 'space-between',
-            alignItems: { xs: 'flex-start', md: 'center' },
             px: { xs: 1.4, md: 2.5 },
             py: { xs: 1.2, md: 1.5 },
             border: '1px solid rgba(255,255,255,0.16)',
@@ -110,50 +108,87 @@ function HeroSection() {
             borderRadius: '3px',
           }}
         >
-          <Link
-            href="#top"
-            underline="none"
-            sx={{
-              color: 'common.white',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 1,
-            }}
-          >
-            <Box
-              aria-hidden
+          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <Link
+              href="#top"
+              underline="none"
               sx={{
-                width: 16,
-                height: 16,
-                borderRadius: '3px',
-                border: '1px solid rgba(73,200,137,0.9)',
-                bgcolor: 'rgba(73,200,137,0.16)',
-                position: 'relative',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  left: 3,
-                  top: 3,
-                  width: 8,
-                  height: 8,
-                  borderRadius: '2px',
-                  backgroundColor: 'rgba(73,200,137,0.86)',
-                },
+                color: 'common.white',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1,
               }}
-            />
-            GreenTech
-          </Link>
+            >
+              <Box
+                aria-hidden
+                sx={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: '3px',
+                  border: '1px solid rgba(73,200,137,0.9)',
+                  bgcolor: 'rgba(73,200,137,0.16)',
+                  position: 'relative',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    left: 3,
+                    top: 3,
+                    width: 8,
+                    height: 8,
+                    borderRadius: '2px',
+                    backgroundColor: 'rgba(73,200,137,0.86)',
+                  },
+                }}
+              />
+              GreenTech
+            </Link>
+
+            <IconButton
+              aria-label={isMobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              onClick={() => setIsMobileNavOpen((open) => !open)}
+              sx={{
+                display: { xs: 'inline-flex', md: 'none' },
+                color: 'common.white',
+                border: '1px solid rgba(255,255,255,0.16)',
+                borderRadius: '3px',
+              }}
+            >
+              {isMobileNavOpen ? <FiX size={18} /> : <FiMenu size={18} />}
+            </IconButton>
+          </Stack>
+
+          <Collapse in={isMobileNavOpen} timeout="auto" sx={{ display: { xs: 'block', md: 'none' } }}>
+            <Stack sx={{ pt: 0.2, '& a': { fontSize: '0.98rem' } }}>
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  underline="none"
+                  onClick={() => setIsMobileNavOpen(false)}
+                  sx={{
+                    color: 'rgba(255,255,255,0.84)',
+                    fontWeight: 500,
+                    py: 0.8,
+                    '&:hover': { color: 'common.white' },
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </Stack>
+          </Collapse>
 
           <Stack
             direction="row"
-            spacing={{ xs: 1.6, md: 4 }}
+            spacing={{ md: 4 }}
             sx={{
+              display: { xs: 'none', md: 'flex' },
               flexWrap: 'wrap',
               rowGap: 0.6,
-              '& a': { fontSize: { xs: '0.94rem', md: '1rem' } },
+              '& a': { fontSize: '1rem' },
             }}
           >
             {navItems.map((item) => (

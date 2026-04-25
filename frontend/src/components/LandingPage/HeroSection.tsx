@@ -255,9 +255,6 @@ function HeroSection() {
                     borderRadius: '3px',
                   }}
                 >
-                  <Box sx={{ color: 'rgba(73,200,137,0.95)', display: 'inline-flex', mb: 0.45 }}>
-                    <item.icon size={14} />
-                  </Box>
                   <Typography sx={{ fontSize: { xs: '1.4rem', md: '1.9rem' }, fontWeight: 700, color: 'common.white' }}>
                     {item.value}
                   </Typography>

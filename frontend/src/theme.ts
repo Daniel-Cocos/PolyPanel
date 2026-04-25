@@ -24,7 +24,7 @@ export const modernTheme = createTheme({
     },
   },
   shape: {
-    borderRadius: 14,
+    borderRadius: 3,
   },
   typography: {
     fontFamily: '"Source Sans 3", "Segoe UI", sans-serif',
@@ -68,7 +68,7 @@ export const modernTheme = createTheme({
       styleOverrides: {
         root: {
           minHeight: 52,
-          borderRadius: 999,
+          borderRadius: '3px',
           paddingInline: 24,
         },
       },
@@ -76,7 +76,7 @@ export const modernTheme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: 999,
+          borderRadius: '3px',
           fontWeight: 700,
         },
       },

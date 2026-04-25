@@ -1,4 +1,4 @@
-# PolyPannel Frontend
+# PolyPanel Frontend
 
 Frontend for a dual land-use company focused on stacked solar in the UK. The immediate goal is a clear landing page that explains how solar mounted above polytunnels can unlock more resilient farming, new generation capacity, and a planning story that works better for communities, councils, and network-constrained energy developers.
 
@@ -13,10 +13,11 @@ This first version is intentionally focused on message clarity rather than produ
 - Keep the design modern, minimal, and corporate with clear section separation, strong typography, and restrained visual cues inspired by greenhouses, field structures, and grid infrastructure.
 - Build the interface with MUI components and theme tokens so sections stay consistent and easier to maintain.
 - Use Google Fonts for a stronger typographic voice (Space Grotesk for headings and Source Sans 3 for body copy).
-- Lead with a fullscreen image-driven hero section that immediately positions the company as a credible partner for growers, developers, and planning stakeholders.
+- Lead with a fullscreen image-driven hero section that immediately positions the company as a credible partner for growers, developers, and planning stakeholders, including a refined responsive glass nav with balanced desktop and mobile spacing and a clean wordmark-style brand label.
 - Use a hybrid motion stack: Framer Motion for lightweight content reveals and GSAP for premium hero and section choreography.
-- Keep the homepage concise and conversion-focused with a clear pricing section for energy developers.
+- Keep the homepage concise and conversion-focused with a clear pricing section that prioritises short plan summaries and optional deeper comparison details.
 - Use a simple `mailto:` contact action for now so the site can launch before a full contact workflow exists.
+- Include a dedicated `Dashboard` CTA in the hero nav that routes to a separate `/dashboard` page for future internal workflow features, including an interactive solar layout planner.
 
 ## Local Development
 
@@ -36,6 +37,8 @@ npm run preview
 npm run deploy
 ```
 
-The current landing page scope includes React Router setup, a dedicated `src/pages/LandingPage.tsx` page, section components under `src/components/LandingPage/`, a fullscreen hero, a 3-tier pricing section, MUI-driven layouts, Google-font typography, lightweight Framer Motion reveals, and GSAP-powered hero and scroll-driven section polish.
+The current scope includes React Router setup, a dedicated `src/pages/LandingPage.tsx` page, a new `src/pages/DashboardPage.tsx` route, section components under `src/components/LandingPage/`, a dashboard solar planner under `src/components/SolarPannel/`, a fullscreen hero with a dashboard CTA, a simplified 3-tier pricing section with optional comparison details, a market-problem section, a founder-led why-us section, MUI-driven layouts, Google-font typography, lightweight Framer Motion reveals, and GSAP-powered hero and scroll-driven section polish.
 
-This frontend is configured for GitHub Pages project-site deployment under `/PolyPannel/`. Run `npm run deploy` from `frontend/` to publish the built `dist/` output to the repository `gh-pages` branch. The build also writes `dist/404.html` from `dist/index.html` so direct navigation to client-side routes keeps working on GitHub Pages.
+The solar planner uses a no-signup bird's-eye imagery source for lightweight layout sketching, includes address autocomplete to jump the map to a searched location, and does not require any local API token.
+
+This frontend is configured for GitHub Pages project-site deployment under `/GreenTech/`. Run `npm run deploy` from `frontend/` to publish the built `dist/` output to the repository `gh-pages` branch. The build also writes `dist/404.html` from `dist/index.html` so direct navigation to client-side routes keeps working on GitHub Pages.

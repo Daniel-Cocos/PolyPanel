@@ -18,7 +18,7 @@ function LandingPage() {
   useLandingPageGsap(mainRef)
 
   return (
-    <Box component="main" ref={mainRef}>
+    <Box component="main" ref={mainRef} className="landing-page">
       <HeroSection />
       <HowItWorksSection />
       <PricingSection />

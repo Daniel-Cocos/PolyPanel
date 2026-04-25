@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -m \"Deploy PolyPanel site\" -d dist"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -16,9 +16,11 @@
     "@mui/material": "^9.0.0",
     "framer-motion": "^12.38.0",
     "gsap": "^3.15.0",
+    "maplibre-gl": "^5.24.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-icons": "^5.6.0",
+    "react-map-gl": "^8.1.1",
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {

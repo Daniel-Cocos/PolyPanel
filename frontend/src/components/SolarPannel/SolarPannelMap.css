@@ -1,0 +1,157 @@
+.solar-pannel-map {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.solar-pannel-map__hint {
+  margin: 0;
+  color: rgba(19, 39, 51, 0.74);
+  font-size: 0.95rem;
+}
+
+.solar-pannel-map__canvas {
+  position: relative;
+  min-height: 420px;
+  height: clamp(420px, 62vh, 600px);
+  border: 1px solid rgba(20, 80, 109, 0.18);
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(10, 34, 47, 0.04), rgba(10, 34, 47, 0.08));
+}
+
+.solar-pannel-map__search-shell {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  width: min(420px, calc(100% - 32px));
+}
+
+.solar-pannel-map__search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+}
+
+.solar-pannel-map__search-input,
+.solar-pannel-map__search-button,
+.solar-pannel-map__result {
+  font: inherit;
+}
+
+.solar-pannel-map__search-input {
+  min-height: 46px;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(20, 80, 109, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #132733;
+}
+
+.solar-pannel-map__search-button {
+  min-height: 46px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: #14506d;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.solar-pannel-map__results {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding: 0.45rem;
+  border: 1px solid rgba(20, 80, 109, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 40px rgba(9, 27, 38, 0.16);
+}
+
+.solar-pannel-map__results-state {
+  margin: 0;
+  padding: 0.5rem 0.55rem;
+  color: rgba(19, 39, 51, 0.72);
+  font-size: 0.92rem;
+}
+
+.solar-pannel-map__result {
+  padding: 0.65rem 0.7rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #132733;
+  text-align: left;
+  cursor: pointer;
+}
+
+.solar-pannel-map__result:hover {
+  background: rgba(20, 80, 109, 0.08);
+}
+
+.solar-pannel-map__panel {
+  width: 26px;
+  height: 12px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 3px;
+  background:
+    linear-gradient(90deg, rgba(73, 200, 137, 0.92), rgba(20, 80, 109, 0.95)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
+  box-shadow: 0 10px 24px rgba(4, 22, 32, 0.34);
+  cursor: grab;
+}
+
+.solar-pannel-map__panel:active {
+  cursor: grabbing;
+}
+
+.solar-pannel-map__popup .mapboxgl-popup-content,
+.solar-pannel-map__popup .maplibregl-popup-content {
+  padding: 0;
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgba(9, 27, 38, 0.2);
+}
+
+.solar-pannel-map__popup-content {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem 1rem;
+  min-width: 210px;
+}
+
+.solar-pannel-map__popup-content p {
+  margin: 0;
+  color: #132733;
+  font-size: 0.92rem;
+}
+
+.solar-pannel-map__delete {
+  margin-top: 0.25rem;
+  min-height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background: #14506d;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.solar-pannel-map__delete:hover {
+  background: #0f4058;
+}
+
+@media (max-width: 599px) {
+  .solar-pannel-map__canvas,
+  .solar-pannel-map__search-shell {
+    width: calc(100% - 24px);
+  }
+
+  .solar-pannel-map__canvas {
+    min-height: 360px;
+    height: 360px;
+  }
+}

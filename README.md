@@ -3,4 +3,4 @@ PolyPannel backend runs locally with `docker compose up --build`. The frontend i
 
 ## Website
 
-[https://daniel-cocos.github.io/PolyPannel/](https://daniel-cocos.github.io/PolyPannel/)
+[https://daniel-cocos.github.io/PolyPanel/](https://daniel-cocos.github.io/PolyPanel/)

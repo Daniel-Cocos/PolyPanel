@@ -1,37 +1,37 @@
-import { Box, Chip, Container, List, ListItem, Paper, Stack, Typography } from '@mui/material'
-import { FiCheck, FiGrid, FiZap } from 'react-icons/fi'
+import { Box, Chip, Container, Paper, Stack, Typography } from '@mui/material'
+import { FiActivity, FiTrendingUp, FiZap } from 'react-icons/fi'
 import Reveal from './Reveal'
 
-const benefitColumns = [
+const problemStats = [
   {
-    title: 'For farmers',
-    label: 'Agricultural continuity',
-    icon: FiGrid,
-    points: [
-      'Retain productive agricultural use instead of surrendering land to single-purpose generation.',
-      'Open additional revenue through infrastructure already tied to growing environments.',
-    ],
+    value: '70GW',
+    label: 'solar needed by 2035',
+    detail: 'The UK is currently at 22GW.',
+    icon: FiTrendingUp,
   },
   {
-    title: 'For energy companies',
-    label: 'Development leverage',
+    value: '£38k',
+    label: 'annual farm energy bill',
+    detail: 'Many growers are carrying that cost today.',
     icon: FiZap,
-    points: [
-      'Unlock projects where suitable land and social licence are increasingly constrained.',
-      'Present a balanced planning case by pairing generation with active agricultural function.',
-    ],
   },
-]
+  {
+    value: '4,000+',
+    label: 'hectares of polytunnels',
+    detail: 'Existing covered land generating nothing.',
+    icon: FiActivity,
+  },
+] as const
 
-/** Splits the commercial and operational upside by audience. */
+/** Frames the market problem in the same visual language as the rest of the page. */
 function BenefitsSection() {
   return (
-    <Box component="section" id="benefits" sx={{ py: { xs: 10, md: 14 }, bgcolor: '#08151d', color: 'common.white' }}>
-      <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 32px))' }}>
-        <Reveal sx={{ display: 'grid', gap: 5 }}>
-          <Box sx={{ display: 'grid', gap: 2, maxWidth: 900 }}>
+    <Box component="section" id="benefits" sx={{ py: { xs: 8, md: 14 }, bgcolor: '#08151d', color: 'common.white' }}>
+      <Container maxWidth={false} sx={{ width: { xs: 'min(1200px, calc(100% - 24px))', sm: 'min(1200px, calc(100% - 32px))' } }}>
+        <Reveal sx={{ display: 'grid', gap: { xs: 3.2, md: 5 } }}>
+          <Box sx={{ display: 'grid', gap: 2, maxWidth: 860 }}>
             <Chip
-              label="Why PolyPannel"
+              label="Problem"
               sx={{
                 justifySelf: 'start',
                 fontWeight: 600,
@@ -40,11 +40,12 @@ function BenefitsSection() {
                 bgcolor: 'rgba(255,255,255,0.08)',
               }}
             />
-            <Typography variant="h2" sx={{ fontSize: { xs: '2rem', md: '3.2rem' }, lineHeight: 1.03, maxWidth: '18ch', color: 'common.white' }}>
-              Built to deliver practical agrivoltaic projects in the UK.
+            <Typography variant="h2" sx={{ fontSize: { xs: '1.85rem', md: '3.2rem' }, lineHeight: 1.03, maxWidth: { xs: '13ch', md: '20ch' } }}>
+              The need for solar is obvious. The route through farmland is not.
             </Typography>
-            <Typography sx={{ color: 'rgba(232,245,249,0.78)', maxWidth: '58ch' }}>
-              We combine food production, clean power, and planning credibility in one disciplined delivery model.
+            <Typography sx={{ color: 'rgba(232,245,249,0.78)', maxWidth: { xs: '34ch', md: '58ch' }, lineHeight: { xs: 1.6, md: 1.7 } }}>
+              The UK needs much more solar, but farmland remains difficult to unlock. Planning resistance, high on-farm
+              energy costs, and underused polytunnel infrastructure are all part of the same problem.
             </Typography>
           </Box>
 
@@ -52,55 +53,45 @@ function BenefitsSection() {
             spacing={{ xs: 2.2, md: 0 }}
             sx={{
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-              gap: { xs: 2.2, md: 3.2 },
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
+              gap: { xs: 1.6, md: 2.4 },
             }}
           >
-            {benefitColumns.map((column, index) => (
-              (() => {
-                const ColumnIcon = column.icon
+            {problemStats.map((stat) => {
+              const StatIcon = stat.icon
 
-                return (
-              <Paper
-                component="article"
-                key={column.title}
-                variant="outlined"
-                sx={{
-                  p: { xs: 2.3, md: 2.8 },
-                  borderRadius: '3px',
-                  borderColor: 'rgba(255,255,255,0.14)',
-                  borderTopWidth: '2px',
-                  borderTopColor: index === 0 ? 'secondary.main' : 'primary.main',
-                  bgcolor: 'rgba(7,18,27,0.42)',
-                  backdropFilter: 'blur(8px)',
-                  '&:hover': { transform: { xs: 'none', md: 'translateY(-2px)' } },
-                  transition: 'transform 180ms ease',
-                }}
-              >
-                <Typography sx={{ color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.72rem', fontWeight: 700 }}>
-                  {column.label}
-                </Typography>
-                <Stack direction="row" spacing={0.9} sx={{ alignItems: 'center', mt: 1, mb: 1.5 }}>
-                  <Box sx={{ color: index === 0 ? 'secondary.main' : 'primary.main', display: 'inline-flex' }}>
-                    <ColumnIcon size={16} />
-                  </Box>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: 'common.white' }}>
-                    {column.title}
+              return (
+                <Paper
+                  key={stat.label}
+                  variant="outlined"
+                  sx={{
+                    p: { xs: 2.3, md: 2.6 },
+                    borderRadius: '3px',
+                    borderColor: 'rgba(255,255,255,0.14)',
+                    bgcolor: 'rgba(7,18,27,0.42)',
+                    backdropFilter: 'blur(8px)',
+                  }}
+                >
+                  <Stack direction="row" spacing={0.9} sx={{ alignItems: 'center', mb: 1.2 }}>
+                    <Box sx={{ color: 'secondary.main', display: 'inline-flex' }}>
+                      <StatIcon size={16} />
+                    </Box>
+                    <Typography sx={{ color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.72rem', fontWeight: 700 }}>
+                      Market pressure
+                    </Typography>
+                  </Stack>
+                  <Typography sx={{ fontSize: { xs: '2rem', md: '2.3rem' }, lineHeight: 1, fontWeight: 700, color: 'common.white', mb: 1 }}>
+                    {stat.value}
                   </Typography>
-                </Stack>
-                <List disablePadding sx={{ display: 'grid', gap: 1.1 }}>
-                  {column.points.map((point) => (
-                    <ListItem key={point} disableGutters sx={{ alignItems: 'flex-start', color: 'rgba(232,245,249,0.8)', py: 0.15 }}>
-                      <FiCheck size={16} color={index === 0 ? '#6fdaa2' : '#2d6a88'} style={{ marginTop: 4, marginRight: 10, flexShrink: 0 }} />
-                      <Typography component="span">{point}</Typography>
-                    </ListItem>
-                  ))}
-                </List>
-              </Paper>
-                )
-              })()
-            ))}
+                  <Typography variant="h6" sx={{ color: 'common.white', mb: 0.8 }}>
+                    {stat.label}
+                  </Typography>
+                  <Typography sx={{ color: 'rgba(232,245,249,0.76)', lineHeight: 1.5 }}>{stat.detail}</Typography>
+                </Paper>
+              )
+            })}
           </Stack>
+
         </Reveal>
       </Container>
     </Box>

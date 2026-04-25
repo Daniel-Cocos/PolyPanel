@@ -1,10 +1,12 @@
-import { Box, Chip, Container, List, ListItem, Typography } from '@mui/material'
+import { Box, Chip, Container, List, ListItem, Paper, Stack, Typography } from '@mui/material'
+import { FiCheck, FiGrid, FiZap } from 'react-icons/fi'
 import Reveal from './Reveal'
 
 const benefitColumns = [
   {
     title: 'For farmers',
     label: 'Agricultural continuity',
+    icon: FiGrid,
     points: [
       'Retain productive agricultural use instead of surrendering land to single-purpose generation.',
       'Open additional revenue through infrastructure already tied to growing environments.',
@@ -13,6 +15,7 @@ const benefitColumns = [
   {
     title: 'For energy companies',
     label: 'Development leverage',
+    icon: FiZap,
     points: [
       'Unlock projects where suitable land and social licence are increasingly constrained.',
       'Present a balanced planning case by pairing generation with active agricultural function.',
@@ -24,7 +27,7 @@ const benefitColumns = [
 function BenefitsSection() {
   return (
     <Box component="section" id="benefits" sx={{ py: { xs: 10, md: 14 }, bgcolor: '#08151d', color: 'common.white' }}>
-      <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 48px))' }}>
+      <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 32px))' }}>
         <Reveal sx={{ display: 'grid', gap: 5 }}>
           <Box sx={{ display: 'grid', gap: 2, maxWidth: 900 }}>
             <Chip
@@ -45,38 +48,59 @@ function BenefitsSection() {
             </Typography>
           </Box>
 
-          <Box data-gsap-card-group sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: { xs: 3, md: 4 } }}>
+          <Stack
+            spacing={{ xs: 2.2, md: 0 }}
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+              gap: { xs: 2.2, md: 3.2 },
+            }}
+          >
             {benefitColumns.map((column, index) => (
-              <Box
+              (() => {
+                const ColumnIcon = column.icon
+
+                return (
+              <Paper
+                component="article"
                 key={column.title}
-                data-gsap-card
+                variant="outlined"
                 sx={{
-                  p: { xs: 2.4, md: 3 },
-                  borderRadius: '24px',
-                  border: '1px solid rgba(255,255,255,0.14)',
-                  bgcolor: 'rgba(7,18,27,0.72)',
-                  backdropFilter: 'blur(14px)',
-                  boxShadow: '0 28px 60px rgba(1, 9, 14, 0.22)',
+                  p: { xs: 2.3, md: 2.8 },
+                  borderRadius: '3px',
+                  borderColor: 'rgba(255,255,255,0.14)',
+                  borderTopWidth: '2px',
+                  borderTopColor: index === 0 ? 'secondary.main' : 'primary.main',
+                  bgcolor: 'rgba(7,18,27,0.42)',
+                  backdropFilter: 'blur(8px)',
+                  '&:hover': { transform: { xs: 'none', md: 'translateY(-2px)' } },
+                  transition: 'transform 180ms ease',
                 }}
               >
-                <Box data-gsap-divider sx={{ height: 3, width: 72, bgcolor: index === 0 ? 'secondary.main' : 'primary.main', borderRadius: '999px', mb: 1.5 }} />
                 <Typography sx={{ color: 'primary.main', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.72rem', fontWeight: 700 }}>
                   {column.label}
                 </Typography>
-                <Typography variant="h5" sx={{ mt: 1, mb: 1.5, fontWeight: 700, color: 'common.white' }}>
-                  {column.title}
-                </Typography>
+                <Stack direction="row" spacing={0.9} sx={{ alignItems: 'center', mt: 1, mb: 1.5 }}>
+                  <Box sx={{ color: index === 0 ? 'secondary.main' : 'primary.main', display: 'inline-flex' }}>
+                    <ColumnIcon size={16} />
+                  </Box>
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: 'common.white' }}>
+                    {column.title}
+                  </Typography>
+                </Stack>
                 <List disablePadding sx={{ display: 'grid', gap: 1.1 }}>
                   {column.points.map((point) => (
-                    <ListItem key={point} disableGutters sx={{ alignItems: 'flex-start', color: 'rgba(232,245,249,0.78)' }}>
-                      <Box sx={{ width: 7, height: 7, borderRadius: '3px', bgcolor: 'primary.main', mt: '0.62em', mr: 1.25, flexShrink: 0 }} />
+                    <ListItem key={point} disableGutters sx={{ alignItems: 'flex-start', color: 'rgba(232,245,249,0.8)', py: 0.15 }}>
+                      <FiCheck size={16} color={index === 0 ? '#6fdaa2' : '#2d6a88'} style={{ marginTop: 4, marginRight: 10, flexShrink: 0 }} />
                       <Typography component="span">{point}</Typography>
                     </ListItem>
                   ))}
                 </List>
-              </Box>
+              </Paper>
+                )
+              })()
             ))}
-          </Box>
+          </Stack>
         </Reveal>
       </Container>
     </Box>

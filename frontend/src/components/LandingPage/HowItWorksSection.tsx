@@ -5,7 +5,7 @@ import Reveal from './Reveal'
 function HowItWorksSection() {
   return (
     <Box component="section" id="how-it-works" sx={{ py: { xs: 10, md: 14 }, bgcolor: '#08151d', color: 'common.white' }}>
-      <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 48px))' }}>
+      <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 32px))' }}>
         <Reveal sx={{ display: 'grid', gap: 4 }}>
           <Box sx={{ maxWidth: 820, display: 'grid', gap: 1.8 }}>
             <Chip

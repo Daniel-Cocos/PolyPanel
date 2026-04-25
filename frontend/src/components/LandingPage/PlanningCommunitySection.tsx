@@ -1,14 +1,17 @@
-import { Box, Chip, Container, Typography } from '@mui/material'
+import { Box, Chip, Container, Paper, Stack, Typography } from '@mui/material'
+import { FiUsers, FiUnlock } from 'react-icons/fi'
 import heroImage from '../../assets/pexels-red-zeppelin-4148472.jpg'
 
 const planningPoints = [
   {
     title: 'Keep productivity visible',
     copy: 'Answer food-displacement concerns with sites that are still clearly working for agriculture.',
+    icon: FiUnlock,
   },
   {
     title: 'Improve stakeholder conversations',
     copy: 'Create a more constructive discussion with councils, neighbours, and rural stakeholders.',
+    icon: FiUsers,
   },
 ]
 
@@ -30,11 +33,11 @@ function PlanningCommunitySection() {
         aria-hidden
         sx={{
           position: 'absolute',
-          inset: 0,
+          inset: '-6% 0',
           backgroundImage: `url(${heroImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundAttachment: { xs: 'scroll', md: 'fixed' },
         }}
       />
       <Box
@@ -46,7 +49,7 @@ function PlanningCommunitySection() {
           backdropFilter: 'blur(2px)',
         }}
       />
-      <Container maxWidth={false} sx={{ position: 'relative', zIndex: 1, width: 'min(1200px, calc(100% - 48px))' }}>
+      <Container maxWidth={false} sx={{ position: 'relative', zIndex: 1, width: 'min(1200px, calc(100% - 32px))' }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.1fr 0.9fr' }, gap: { xs: 4, md: 5 } }}>
           <Box sx={{ display: 'grid', gap: 2.1, maxWidth: 690 }}>
             <Chip
@@ -68,29 +71,38 @@ function PlanningCommunitySection() {
           </Box>
 
           <Box component="ol" sx={{ m: 0, p: 0, listStyle: 'none', display: 'grid', gap: 1.8 }}>
-            {planningPoints.map((point, index) => (
-              <Box component="li" key={point.title} sx={{ listStyle: 'none' }}>
-                <Box
-                  sx={{
-                    p: { xs: 2.4, md: 2.8 },
-                    borderRadius: '22px',
-                    border: '1px solid rgba(255,255,255,0.14)',
-                    bgcolor: 'rgba(7,18,27,0.72)',
-                    backdropFilter: 'blur(14px)',
-                    boxShadow: '0 28px 60px rgba(1, 9, 14, 0.22)',
-                  }}
-                >
-                  <Box sx={{ height: 2, width: 82, bgcolor: 'secondary.main', borderRadius: '999px', mb: 1.8 }} />
-                  <Typography sx={{ color: 'rgba(73,200,137,0.95)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.12em', fontSize: '0.72rem' }}>
+            {planningPoints.map((point, index) => {
+              const PointIcon = point.icon as React.ElementType
+              return (
+              <Paper
+                component="li"
+                key={point.title}
+                variant="outlined"
+                sx={{
+                  listStyle: 'none',
+                  p: { xs: 2.3, md: 2.8 },
+                  borderRadius: '3px',
+                  borderColor: 'rgba(255,255,255,0.14)',
+                  borderTopWidth: '1px',
+                  bgcolor: 'rgba(7,18,27,0.42)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <Stack direction="row" spacing={0.9} sx={{ alignItems: 'center', mb: 0.6 }}>
+                  <Box sx={{ color: 'secondary.main', display: 'inline-flex' }}>
+                    {PointIcon && <PointIcon size={14} />}
+                  </Box>
+                  <Typography sx={{ color: 'rgba(73,200,137,0.95)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.12em', fontSize: '0.72rem', m: 0 }}>
                     0{index + 1}
                   </Typography>
-                  <Typography variant="h6" sx={{ mt: 0.8, mb: 0.6, color: 'common.white' }}>
-                    {point.title}
-                  </Typography>
-                  <Typography sx={{ color: 'rgba(232,245,249,0.78)' }}>{point.copy}</Typography>
-                </Box>
-              </Box>
-            ))}
+                </Stack>
+                <Typography variant="h6" sx={{ mt: 0.8, mb: 0.6, color: 'common.white' }}>
+                  {point.title}
+                </Typography>
+                <Typography sx={{ color: 'rgba(232,245,249,0.78)' }}>{point.copy}</Typography>
+              </Paper>
+              )
+            })}
           </Box>
         </Box>
       </Container>

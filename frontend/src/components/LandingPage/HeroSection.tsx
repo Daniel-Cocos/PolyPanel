@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { Box, Button, Chip, Container, Link, Stack, Typography } from '@mui/material'
+import { FiClock, FiMapPin, FiSun } from 'react-icons/fi'
 import heroImage from '../../assets/pexels-red-zeppelin-4148472.jpg'
 import { gsap } from '../../lib/gsap'
 
@@ -13,9 +14,9 @@ const navItems = [
 ]
 
 const impactItems = [
-  { value: '2x', label: 'land-use story' },
-  { value: 'UK', label: 'planning-led approach' },
-  { value: '24h', label: 'response on new enquiries' },
+  { value: '2x', label: 'land-use story', icon: FiSun },
+  { value: 'UK', label: 'planning-led approach', icon: FiMapPin },
+  { value: '24h', label: 'response on new enquiries', icon: FiClock },
 ]
 
 /** Introduces the company and core value proposition. */
@@ -65,11 +66,11 @@ function HeroSection() {
         aria-hidden
         sx={{
           position: 'absolute',
-          inset: 0,
+          inset: '-8% 0',
           backgroundImage: `url(${heroImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundAttachment: { xs: 'scroll', md: 'fixed' },
         }}
       />
       <Box
@@ -87,33 +88,74 @@ function HeroSection() {
         sx={{
           position: 'relative',
           zIndex: 1,
-          width: 'min(1200px, calc(100% - 48px))',
+          width: 'min(1200px, calc(100% - 32px))',
           minHeight: '100dvh',
           display: 'flex',
           flexDirection: 'column',
-          py: { xs: 3, md: 4 },
+          py: { xs: 2.5, md: 4 },
         }}
       >
         <Stack
           data-gsap-hero-nav
           direction={{ xs: 'column', md: 'row' }}
-          spacing={2}
+          spacing={{ xs: 1.2, md: 2 }}
           sx={{
             justifyContent: 'space-between',
             alignItems: { xs: 'flex-start', md: 'center' },
-            px: { xs: 2, md: 2.5 },
-            py: 1.5,
+            px: { xs: 1.4, md: 2.5 },
+            py: { xs: 1.2, md: 1.5 },
             border: '1px solid rgba(255,255,255,0.16)',
             bgcolor: 'rgba(5,16,24,0.2)',
             backdropFilter: 'blur(16px)',
-            borderRadius: '20px',
+            borderRadius: '3px',
           }}
         >
-          <Link href="#top" underline="none" sx={{ color: 'common.white', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <Link
+            href="#top"
+            underline="none"
+            sx={{
+              color: 'common.white',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            <Box
+              aria-hidden
+              sx={{
+                width: 16,
+                height: 16,
+                borderRadius: '3px',
+                border: '1px solid rgba(73,200,137,0.9)',
+                bgcolor: 'rgba(73,200,137,0.16)',
+                position: 'relative',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  left: 3,
+                  top: 3,
+                  width: 8,
+                  height: 8,
+                  borderRadius: '2px',
+                  backgroundColor: 'rgba(73,200,137,0.86)',
+                },
+              }}
+            />
             GreenTech
           </Link>
 
-          <Stack direction="row" spacing={{ xs: 2, md: 4 }} sx={{ flexWrap: 'wrap' }}>
+          <Stack
+            direction="row"
+            spacing={{ xs: 1.6, md: 4 }}
+            sx={{
+              flexWrap: 'wrap',
+              rowGap: 0.6,
+              '& a': { fontSize: { xs: '0.94rem', md: '1rem' } },
+            }}
+          >
             {navItems.map((item) => (
               <Link
                 key={item.label}
@@ -127,7 +169,7 @@ function HeroSection() {
           </Stack>
         </Stack>
 
-        <Box sx={{ flex: 1, width: '100%', display: 'grid', alignContent: 'center', pt: { xs: 5, md: 7 } }}>
+        <Box sx={{ flex: 1, width: '100%', display: 'grid', alignContent: 'center', pt: { xs: 4, md: 7 } }}>
           <Box
             sx={{
               width: '100%',
@@ -136,7 +178,7 @@ function HeroSection() {
               display: 'grid',
               justifyItems: 'center',
               textAlign: 'center',
-              gap: 2.75,
+               gap: { xs: 2.1, md: 2.75 },
             }}
           >
           <Chip
@@ -157,8 +199,8 @@ function HeroSection() {
             variant="h1"
             data-gsap-hero-title
             sx={{
-              maxWidth: '11ch',
-              fontSize: { xs: 'clamp(2.3rem, 11vw, 3.4rem)', md: 'clamp(3.2rem, 8vw, 6.2rem)' },
+               maxWidth: { xs: '12ch', md: '11ch' },
+               fontSize: { xs: 'clamp(2rem, 10.4vw, 3rem)', md: 'clamp(3.2rem, 8vw, 6.2rem)' },
               lineHeight: 0.96,
               color: 'common.white',
               fontWeight: 700,
@@ -172,18 +214,18 @@ function HeroSection() {
             We help energy companies install solar on farmers land without compromising agricultural productivity.
           </Typography>
 
-          <Stack data-gsap-hero-actions direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
+           <Stack data-gsap-hero-actions direction={{ xs: 'column', sm: 'row' }} spacing={1.2} sx={{ width: { xs: '100%', sm: 'auto' }, maxWidth: 420 }}>
             <Button
               variant="contained"
               href="mailto:hello@yourcompany.co.uk?subject=Stacked%20solar%20enquiry"
-              sx={{ bgcolor: '#49c889', color: '#042018', '&:hover': { bgcolor: '#35b576' } }}
+              sx={{ width: { xs: '100%', sm: 'auto' }, bgcolor: '#49c889', color: '#042018', '&:hover': { bgcolor: '#35b576' } }}
             >
               Book consultation
             </Button>
             <Button
               variant="outlined"
               href="#pricing"
-              sx={{ borderColor: 'rgba(255,255,255,0.32)', color: 'common.white', '&:hover': { borderColor: 'rgba(255,255,255,0.7)' } }}
+              sx={{ width: { xs: '100%', sm: 'auto' }, borderColor: 'rgba(255,255,255,0.32)', color: 'common.white', '&:hover': { borderColor: 'rgba(255,255,255,0.7)' } }}
             >
               View pricing
             </Button>
@@ -192,28 +234,31 @@ function HeroSection() {
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
-                gap: 1.5,
-                width: '100%',
-                maxWidth: 940,
-                mt: { xs: 3, md: 4 },
-              }}
-            >
+                 gridTemplateColumns: { xs: '1fr', sm: 'repeat(3, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' },
+                 gap: { xs: 1, sm: 1.2, md: 1.5 },
+                 width: '100%',
+                 maxWidth: 940,
+                 mt: { xs: 2.2, md: 4 },
+               }}
+             >
               {impactItems.map((item) => (
                 <Box
                   key={item.label}
                   data-gsap-hero-stat
                   sx={{
-                    p: { xs: 2, md: 2.2 },
-                    textAlign: 'left',
+                     p: { xs: 1.6, md: 2.2 },
+                     textAlign: 'left',
                     border: '1px solid rgba(255,255,255,0.14)',
                     bgcolor: 'rgba(7,18,27,0.34)',
                     backdropFilter: 'blur(16px)',
                     boxShadow: '0 28px 60px rgba(1, 9, 14, 0.22)',
-                    borderRadius: '18px',
+                    borderRadius: '3px',
                   }}
                 >
-                  <Typography sx={{ fontSize: { xs: '1.55rem', md: '1.9rem' }, fontWeight: 700, color: 'common.white' }}>
+                  <Box sx={{ color: 'rgba(73,200,137,0.95)', display: 'inline-flex', mb: 0.45 }}>
+                    <item.icon size={14} />
+                  </Box>
+                  <Typography sx={{ fontSize: { xs: '1.4rem', md: '1.9rem' }, fontWeight: 700, color: 'common.white' }}>
                     {item.value}
                   </Typography>
                   <Typography sx={{ color: 'rgba(255,255,255,0.72)' }}>{item.label}</Typography>

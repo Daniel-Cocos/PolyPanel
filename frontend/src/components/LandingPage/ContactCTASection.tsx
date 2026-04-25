@@ -11,7 +11,7 @@ function ContactCTASection() {
 
   return (
     <Box component="section" id="contact" sx={{ py: { xs: 10, md: 14 }, bgcolor: '#08151d' }}>
-      <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 48px))' }}>
+      <Container maxWidth={false} sx={{ width: 'min(1200px, calc(100% - 32px))' }}>
         <Reveal>
           <Box
             sx={{
@@ -49,10 +49,12 @@ function ContactCTASection() {
                 justifySelf: 'center',
                 bgcolor: '#49c889',
                 color: '#042018',
-                px: { xs: 2.5, md: 4 },
+                px: { xs: 2.2, md: 4 },
+                width: { xs: '100%', sm: 'auto' },
+                maxWidth: { xs: 420, sm: 'none' },
                 minHeight: 58,
                 borderRadius: '3px',
-                fontSize: { xs: '1rem', md: '1.18rem' },
+                fontSize: { xs: '0.95rem', md: '1.18rem' },
                 '&:hover': { bgcolor: '#35b576' },
               }}
             >

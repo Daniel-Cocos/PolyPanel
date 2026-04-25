@@ -100,7 +100,7 @@ function PricingSection() {
                   variant="outlined"
                   sx={{
                     p: isFeatured ? 4.4 : 3,
-                    borderRadius: '24px',
+                    borderRadius: '3px',
                     position: 'relative',
                     minHeight: isFeatured ? 580 : 420,
                     display: 'flex',

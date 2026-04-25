@@ -1,6 +1,6 @@
 import { Box, Button, Chip, Container, Paper, Stack, Typography } from '@mui/material'
 import { FiAward, FiCheckCircle, FiClipboard, FiMap } from 'react-icons/fi'
-import heroImage from '../../assets/pexels-red-zeppelin-4148472.jpg'
+import pricingImage from '../../assets/pexels-kindelmedia-9799742.jpg'
 
 const pricingTiers = [
   {
@@ -51,7 +51,7 @@ function PricingSection() {
         sx={{
           position: 'absolute',
           inset: '-6% 0',
-          backgroundImage: `url(${heroImage})`,
+          backgroundImage: `url(${pricingImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: { xs: 'scroll', md: 'fixed' },
@@ -152,28 +152,29 @@ function PricingSection() {
                   </Typography>
                   <Typography sx={{ color: 'rgba(232,245,249,0.82)', mb: 1.6 }}>{tier.summary}</Typography>
 
-                  <Stack component="ul" spacing={0.85} sx={{ m: 0, pl: 2.4, mb: 2.2 }}>
-                    {tier.features.map((feature) => (
-                      <Stack
-                        component="li"
-                        key={feature}
-                        direction="row"
-                        spacing={0.8}
-                        sx={{ alignItems: 'flex-start', color: 'rgba(232,245,249,0.82)', pl: 0.2 }}
-                      >
-                        <Box sx={{ color: isFeatured ? 'secondary.main' : 'secondary.light', display: 'inline-flex', mt: '0.16em' }}>
-                          <FiCheckCircle size={13} />
-                        </Box>
-                        <Typography
-                          component="span"
-                          sx={{
-                            color: 'rgba(232,245,249,0.82)',
-                          }}
+                  <Stack component="ul" spacing={0.85} sx={{ m: 0, pl: 0, mb: 2.2, listStyle: 'none' }}>
+                      {tier.features.map((feature) => (
+                        <Stack
+                          component="li"
+                          key={feature}
+                          direction="row"
+                          spacing={0.75}
+                          sx={{ alignItems: 'flex-start', color: 'rgba(232,245,249,0.82)', listStyle: 'none', mb: 0.5 }}
                         >
-                          {feature}
-                        </Typography>
-                      </Stack>
-                    ))}
+                          <Box sx={{ color: isFeatured ? 'secondary.main' : 'secondary.light', display: 'inline-flex', mt: '0.15em', flexShrink: 0 }}>
+                            <FiCheckCircle size={12} />
+                          </Box>
+                          <Typography
+                            component="span"
+                            sx={{
+                              color: 'rgba(232,245,249,0.82)',
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            {feature}
+                          </Typography>
+                        </Stack>
+                      ))}
                   </Stack>
 
                   <Button

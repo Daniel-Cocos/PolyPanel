@@ -1,6 +1,6 @@
 import { Box, Chip, Container, Paper, Stack, Typography } from '@mui/material'
 import { FiUsers, FiUnlock } from 'react-icons/fi'
-import heroImage from '../../assets/pexels-red-zeppelin-4148472.jpg'
+import planningImage from '../../assets/pexels-stitch-20280054.jpg'
 
 const planningPoints = [
   {
@@ -34,7 +34,7 @@ function PlanningCommunitySection() {
         sx={{
           position: 'absolute',
           inset: '-6% 0',
-          backgroundImage: `url(${heroImage})`,
+          backgroundImage: `url(${planningImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: { xs: 'scroll', md: 'fixed' },

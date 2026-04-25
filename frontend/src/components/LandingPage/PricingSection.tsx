@@ -106,15 +106,19 @@ function PricingSection() {
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: isFeatured ? 'center' : 'flex-start',
-                    borderColor: isFeatured ? 'rgba(73, 200, 137, 0.9)' : 'rgba(255,255,255,0.16)',
-                    backgroundColor: isFeatured ? 'rgba(235, 244, 239, 0.9)' : 'rgba(8, 25, 35, 0.72)',
+                    borderColor: isFeatured ? 'rgba(73, 200, 137, 0.92)' : 'rgba(255,255,255,0.16)',
+                    backgroundColor: isFeatured ? 'rgba(10, 28, 39, 0.9)' : 'rgba(8, 25, 35, 0.72)',
                     backdropFilter: 'blur(18px)',
                     backgroundImage: 'none',
-                    boxShadow: isFeatured ? '0 30px 60px rgba(0, 0, 0, 0.26)' : '0 18px 36px rgba(0, 0, 0, 0.22)',
+                    boxShadow: isFeatured
+                      ? '0 34px 72px rgba(1, 9, 14, 0.42)'
+                      : '0 18px 36px rgba(0, 0, 0, 0.22)',
                     transition: 'box-shadow 180ms ease, border-color 180ms ease',
                     willChange: 'auto',
                     '&:hover': {
-                      boxShadow: isFeatured ? '0 36px 72px rgba(0, 0, 0, 0.3)' : '0 24px 42px rgba(0, 0, 0, 0.28)',
+                      boxShadow: isFeatured
+                        ? '0 38px 82px rgba(1, 9, 14, 0.5)'
+                        : '0 24px 42px rgba(0, 0, 0, 0.28)',
                     },
                     zIndex: isFeatured ? 3 : 1,
                   }}
@@ -128,14 +132,14 @@ function PricingSection() {
                     />
                   ) : null}
 
-                  <Typography variant="h5" sx={{ fontSize: isFeatured ? '1.5rem' : '1.35rem', mb: 0.8, color: isFeatured ? 'text.primary' : 'common.white' }}>
+                  <Typography variant="h5" sx={{ fontSize: isFeatured ? '1.5rem' : '1.35rem', mb: 0.8, color: 'common.white' }}>
                     {tier.name}
                   </Typography>
                   <Box sx={{ height: 3, width: 72, bgcolor: isFeatured ? 'secondary.main' : 'primary.light', borderRadius: '999px', mb: 1.5 }} />
-                  <Typography sx={{ color: 'primary.main', fontWeight: 700, mb: 1.2, fontSize: isFeatured ? '1.55rem' : '1.35rem' }}>
+                  <Typography sx={{ color: isFeatured ? 'secondary.light' : 'primary.main', fontWeight: 700, mb: 1.2, fontSize: isFeatured ? '1.7rem' : '1.35rem' }}>
                     {tier.price}
                   </Typography>
-                  <Typography sx={{ color: isFeatured ? 'text.secondary' : 'rgba(232,245,249,0.78)', mb: 1.6 }}>{tier.summary}</Typography>
+                  <Typography sx={{ color: 'rgba(232,245,249,0.82)', mb: 1.6 }}>{tier.summary}</Typography>
 
                   <Stack component="ul" spacing={0.85} sx={{ m: 0, pl: 2.4, mb: 2.2 }}>
                     {tier.features.map((feature) => (
@@ -143,7 +147,7 @@ function PricingSection() {
                         component="li"
                         key={feature}
                         sx={{
-                          color: isFeatured ? 'text.secondary' : 'rgba(232,245,249,0.8)',
+                          color: 'rgba(232,245,249,0.82)',
                           pl: 0.2,
                           '&::marker': {
                             color: isFeatured ? 'primary.main' : 'secondary.light',
@@ -155,7 +159,21 @@ function PricingSection() {
                     ))}
                   </Stack>
 
-                  <Button variant={isFeatured ? 'contained' : 'outlined'} href="#contact" sx={{ mt: 'auto', justifySelf: 'stretch' }}>
+                  <Button
+                    variant={isFeatured ? 'contained' : 'outlined'}
+                    href="#contact"
+                    sx={
+                      isFeatured
+                        ? {
+                            mt: 'auto',
+                            justifySelf: 'stretch',
+                            bgcolor: 'secondary.main',
+                            color: '#042018',
+                            '&:hover': { bgcolor: 'secondary.light' },
+                          }
+                        : { mt: 'auto', justifySelf: 'stretch' }
+                    }
+                  >
                     {tier.cta}
                   </Button>
                 </Paper>

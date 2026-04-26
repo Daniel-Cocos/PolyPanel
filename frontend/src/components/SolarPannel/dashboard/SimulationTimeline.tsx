@@ -120,7 +120,7 @@ function SimulationTimeline({
           </Stack>
 
           <Typography sx={{ mt: 0.8, color: dashboardPalette.muted, fontSize: '0.86rem' }}>
-            Scroll through the year to simulate fake-panel conditions against real monthly weather history.
+            Scroll through the year to simulate proposed-panel conditions against real monthly weather history.
           </Typography>
         </>
       ) : null}

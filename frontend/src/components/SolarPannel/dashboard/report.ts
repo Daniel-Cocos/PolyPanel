@@ -28,7 +28,7 @@ function buildSimulationReportCsv(reportPayload: ReportPayload) {
     'total_energy_kwh',
     'recommended_mode',
     'alert_count',
-    'fake_panel_count',
+    'proposed_panel_count',
     'real_panel_count',
   ]
 
@@ -44,7 +44,7 @@ function buildSimulationReportCsv(reportPayload: ReportPayload) {
     point.totalEnergyKwh,
     point.recommendedMode,
     point.alerts.length,
-    point.panels.filter((panel) => panel.type === 'fake').length,
+    point.panels.filter((panel) => panel.type === 'proposed').length,
     point.panels.filter((panel) => panel.type === 'real').length,
   ])
 

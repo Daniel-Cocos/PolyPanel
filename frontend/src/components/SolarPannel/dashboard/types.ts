@@ -1,4 +1,4 @@
-export type PanelType = 'real' | 'fake'
+export type PanelType = 'real' | 'proposed'
 
 export type PanelMode = 'flat_down' | 'sun_tracking' | 'letting_sun_in'
 

@@ -114,7 +114,7 @@ function SolarPannelMap() {
     openGridCellModal,
     registerGridCells,
     addRealPanelToSelectedCell,
-    addFakePanelToSelectedCell,
+    addProposedPanelToSelectedCell,
     clearSelectedGridCellPanel,
     setPanelMode,
   } = useDashboardState()
@@ -399,7 +399,7 @@ function SolarPannelMap() {
         selectedGridCellPanel={selectedGridCellPanel}
         selectedGridCellPanelMetrics={selectedGridCellPanelMetrics}
         onAssignRealPanel={addRealPanelToSelectedCell}
-        onAssignFakePanel={addFakePanelToSelectedCell}
+        onAssignProposedPanel={addProposedPanelToSelectedCell}
         onClearSelectedGridCellPanel={clearSelectedGridCellPanel}
         onSetPanelMode={setPanelMode}
       />

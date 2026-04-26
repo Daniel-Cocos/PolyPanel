@@ -22,7 +22,7 @@ import { dashboardPalette } from './styles'
 import { useDashboardState } from './useDashboardState'
 import type { PanelMode } from './types'
 
-type PanelOption = 'real' | 'fake'
+type PanelOption = 'real' | 'proposed'
 
 /** Renders the shared panel-grid modal for map and sidebar entry points. */
 function PanelDetailsModal() {
@@ -87,8 +87,8 @@ function PanelDetailsModal() {
     closePanelModal()
   }
 
-  const handleAddFakePanel = () => {
-    assignSelectedCellWithPanelType('fake')
+  const handleAddProposedPanel = () => {
+    assignSelectedCellWithPanelType('proposed')
     setRealPanelIdError(null)
     closePanelModal()
   }
@@ -172,8 +172,8 @@ function PanelDetailsModal() {
             <ToggleButton value="real" disabled={isGridCellMissing}>
               Real panel
             </ToggleButton>
-            <ToggleButton value="fake" disabled={isGridCellMissing}>
-              Fake panel
+            <ToggleButton value="proposed" disabled={isGridCellMissing}>
+              Proposed panel
             </ToggleButton>
           </ToggleButtonGroup>
 
@@ -210,9 +210,9 @@ function PanelDetailsModal() {
               </Stack>
             )}
 
-            {panelOption === 'fake' && (
+            {panelOption === 'proposed' && (
               <Stack spacing={0.6}>
-                <Typography sx={sectionLabelSx}>Add planning fake panel</Typography>
+                <Typography sx={sectionLabelSx}>Add planning proposed panel</Typography>
                 <Typography variant="body2" sx={{ color: dashboardPalette.muted }}>
                   Create a placeholder panel for planning and simulation before installation.
                 </Typography>
@@ -275,11 +275,11 @@ function PanelDetailsModal() {
         <Button
           variant="contained"
           color="secondary"
-          onClick={panelOption === 'real' ? handleAddRealPanel : handleAddFakePanel}
+          onClick={panelOption === 'real' ? handleAddRealPanel : handleAddProposedPanel}
           disabled={isSubmitDisabled}
           sx={{ minHeight: 42, textTransform: 'none', fontWeight: 700, color: '#052018' }}
         >
-          {panelOption === 'real' ? 'Link real panel' : 'Add fake panel'}
+          {panelOption === 'real' ? 'Link real panel' : 'Add proposed panel'}
         </Button>
       </DialogActions>
     </Dialog>

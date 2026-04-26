@@ -48,7 +48,7 @@ function RecentEnergyChart({ energySeries, labels, selectedIndex, hasPanels }: R
         </>
       ) : (
         <Typography sx={{ mt: 1, color: dashboardPalette.muted, fontSize: '0.9rem' }}>
-          Add a fake or real panel to begin simulating energy output for the selected month.
+          Add a proposed or real panel to begin simulating energy output for the selected month.
         </Typography>
       )}
     </Box>

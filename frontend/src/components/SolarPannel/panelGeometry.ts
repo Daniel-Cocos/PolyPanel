@@ -29,8 +29,9 @@ type PanelHandleFeatureCollection = {
   }>
 }
 
-const PANEL_LENGTH_METERS = 4.56
-const PANEL_WIDTH_METERS = 2.26
+const PANEL_SCALE_FACTOR = 2.5
+const PANEL_LENGTH_METERS = 4.56 * PANEL_SCALE_FACTOR
+const PANEL_WIDTH_METERS = 2.26 * PANEL_SCALE_FACTOR
 
 /** Converts meters to latitude degrees near the given location. */
 function metersToLatitudeDegrees(meters: number) {

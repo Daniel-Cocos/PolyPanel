@@ -1,4 +1,9 @@
-import type { CircleLayerSpecification, FillLayerSpecification, LineLayerSpecification, StyleSpecification } from 'maplibre-gl'
+import type {
+  CircleLayerSpecification,
+  FillLayerSpecification,
+  LineLayerSpecification,
+  StyleSpecification,
+} from 'maplibre-gl'
 
 export const birdseyeMapStyle: StyleSpecification = {
   version: 8,
@@ -30,6 +35,83 @@ export const savedFarmOutlineLayer: LineLayerSpecification = {
   paint: {
     'line-color': '#49c889',
     'line-width': 2,
+  },
+}
+
+export const farmGridFillLayer: FillLayerSpecification = {
+  id: 'farm-grid-fill',
+  source: 'farm-grid',
+  type: 'fill',
+  paint: {
+    'fill-color': [
+      'case',
+      ['==', ['get', 'content'], 'real-panel'],
+      '#1f7fab',
+      ['==', ['get', 'content'], 'fake-panel'],
+      '#2f9f72',
+      '#a7d2e5',
+    ],
+    'fill-opacity': [
+      'case',
+      ['==', ['get', 'content'], 'real-panel'],
+      0.8,
+      ['==', ['get', 'content'], 'fake-panel'],
+      0.74,
+      0.14,
+    ],
+  },
+}
+
+export const farmGridOutlineLayer: LineLayerSpecification = {
+  id: 'farm-grid-outline',
+  source: 'farm-grid',
+  type: 'line',
+  paint: {
+    'line-color': [
+      'case',
+      ['==', ['get', 'content'], 'real-panel'],
+      '#d5f1ff',
+      ['==', ['get', 'content'], 'fake-panel'],
+      '#d2ffe9',
+      'rgba(216, 237, 247, 0.82)',
+    ],
+    'line-width': [
+      'case',
+      ['==', ['get', 'content'], 'empty'],
+      1,
+      1.4,
+    ],
+  },
+}
+
+export const selectedGridCellOutlineLayer: LineLayerSpecification = {
+  id: 'selected-grid-cell-outline',
+  source: 'selected-grid-cell',
+  type: 'line',
+  paint: {
+    'line-color': '#dff4ff',
+    'line-width': 2.6,
+  },
+}
+
+export const selectedGridCellGlowLayer: LineLayerSpecification = {
+  id: 'selected-grid-cell-glow',
+  source: 'selected-grid-cell',
+  type: 'line',
+  paint: {
+    'line-color': '#37a5dc',
+    'line-width': 8,
+    'line-opacity': 0.38,
+  },
+}
+
+export const selectedGridCellFillLayer: FillLayerSpecification = {
+  id: 'selected-grid-cell-fill',
+  source: 'selected-grid-cell',
+  type: 'fill',
+  paint: {
+    'fill-color': '#2b96cf',
+    'fill-opacity': 0.28,
   },
 }
 

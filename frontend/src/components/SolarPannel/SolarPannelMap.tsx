@@ -1,61 +1,62 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Box } from '@mui/material'
 import Map, {
   Layer,
   NavigationControl,
   Source,
   type MapGeoJSONFeature,
-  type MapLayerMouseEvent,
   type MapMouseEvent,
   type MapRef,
   type ViewState,
   type ViewStateChangeEvent,
 } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import './SolarPannelMap.css'
 import {
-  clampCoordinateToFarm,
   createFarmArea,
   createFarmFeatureCollection,
   getFarmBounds,
   getFarmCenter,
-  isCoordinateInsideFarm,
   loadSavedFarmArea,
   persistFarmArea,
   type Coordinate,
   type FarmArea,
 } from './farmArea'
 import {
+  createFarmGridCells,
+  createFarmGridFeatureCollection,
+  createSelectedGridCellFeatureCollection,
+  type GridCell,
+} from './gridSystem'
+import {
   birdseyeMapStyle,
   draftFarmOutlineLayer,
+  farmGridFillLayer,
+  farmGridOutlineLayer,
   savedFarmFillLayer,
   savedFarmOutlineLayer,
-  selectedSolarPanelFillLayer,
-  selectedSolarPanelGlowLayer,
-  selectedSolarPanelOutlineLayer,
-  solarPanelFillLayer,
-  solarPanelOutlineLayer,
+  selectedGridCellFillLayer,
+  selectedGridCellGlowLayer,
+  selectedGridCellOutlineLayer,
 } from './mapConfig'
-import { createPanelFeatureCollection, getSolarPanelDimensions } from './panelGeometry'
 import SolarPannelPlannerControls from './SolarPannelPlannerControls'
 import { useAddressSearch } from './useAddressSearch'
+import { useDashboardState } from './dashboard/useDashboardState'
+import { dashboardPalette } from './dashboard/styles'
 
-type SolarPanel = {
-  id: string
-  latitude: number
-  longitude: number
-  rotation: number
-}
+const GRID_SCALE_FACTOR = 2.1
+const GRID_LENGTH_METERS = 11.4 * GRID_SCALE_FACTOR
+const GRID_WIDTH_METERS = 5.65 * GRID_SCALE_FACTOR
 
 const defaultViewState: ViewState = {
   longitude: -1.5486,
   latitude: 52.4159,
   zoom: 17,
-  pitch: 52,
-  bearing: -24,
+  pitch: 0,
+  bearing: 0,
   padding: { top: 0, right: 0, bottom: 0, left: 0 },
 }
 
-/** Formats a map coordinate for popup display. */
+/** Formats a map coordinate for panel display text. */
 function formatCoordinate(value: number) {
   return value.toFixed(6)
 }
@@ -71,7 +72,7 @@ function getInitialViewState() {
   return { ...defaultViewState, latitude: center.latitude, longitude: center.longitude, zoom: 18 }
 }
 
-/** Renders an interactive solar panel planning map. */
+/** Renders the top-down farm map with selectable planning grid cells. */
 function SolarPannelMap() {
   const mapRef = useRef<MapRef | null>(null)
   const [viewState, setViewState] = useState(getInitialViewState)
@@ -82,18 +83,50 @@ function SolarPannelMap() {
   const [draftStart, setDraftStart] = useState<Coordinate | null>(null)
   const [draftCorner, setDraftCorner] = useState<Coordinate | null>(null)
   const [isSelectingFarm, setIsSelectingFarm] = useState(false)
-  const [panels, setPanels] = useState<SolarPanel[]>([])
-  const [selectedPanelId, setSelectedPanelId] = useState<string | null>(null)
-  const [draggingPanelId, setDraggingPanelId] = useState<string | null>(null)
-  const [isHoveringPanel, setIsHoveringPanel] = useState(false)
-  const [nextPanelNumber, setNextPanelNumber] = useState(1)
+  const [isHoveringGridCell, setIsHoveringGridCell] = useState(false)
   const [plannerNotice, setPlannerNotice] = useState<string | null>(null)
 
-  const selectedPanel = panels.find((panel) => panel.id === selectedPanelId) ?? null
+  const {
+    panelMetricsById,
+    gridCellContent,
+    selectedGridCell,
+    selectedGridCellPanel,
+    openGridCellModal,
+    registerGridCells,
+    addRealPanelToSelectedCell,
+    addFakePanelToSelectedCell,
+    clearSelectedGridCellPanel,
+    setPanelMode,
+  } = useDashboardState()
+
   const draftFarm = draftStart && draftCorner ? createFarmArea(draftStart, draftCorner, 'Draft farm') : null
-  const searchEnabled = !farmArea || isSelectingFarm
-  const panelDimensions = getSolarPanelDimensions()
   const farmCenter = farmArea ? getFarmCenter(farmArea) : null
+  const searchEnabled = !farmArea || isSelectingFarm
+
+  const farmGridCells = useMemo(() => {
+    if (!farmArea) {
+      return []
+    }
+
+    return createFarmGridCells(farmArea, GRID_LENGTH_METERS, GRID_WIDTH_METERS)
+  }, [farmArea])
+
+  const farmGridFeatureCollection = useMemo(
+    () => createFarmGridFeatureCollection(farmGridCells, gridCellContent),
+    [farmGridCells, gridCellContent],
+  )
+
+  const registeredGridCells = useMemo(
+    () =>
+      farmGridCells.map((cell) => ({
+        id: cell.id,
+        row: cell.row,
+        column: cell.column,
+        latitude: cell.centerLatitude,
+        longitude: cell.centerLongitude,
+      })),
+    [farmGridCells],
+  )
 
   const {
     addressQuery,
@@ -126,17 +159,21 @@ function SolarPannelMap() {
   }, [farmArea])
 
   useEffect(() => {
+    registerGridCells(registeredGridCells)
+  }, [registerGridCells, registeredGridCells])
+
+  useEffect(() => {
     const canvas = mapRef.current?.getMap().getCanvas()
     if (!canvas) {
       return
     }
 
-    canvas.style.cursor = draggingPanelId ? 'grabbing' : isHoveringPanel ? 'move' : ''
+    canvas.style.cursor = isSelectingFarm ? 'crosshair' : isHoveringGridCell ? 'pointer' : ''
 
     return () => {
       canvas.style.cursor = ''
     }
-  }, [draggingPanelId, isHoveringPanel])
+  }, [isHoveringGridCell, isSelectingFarm])
 
   const syncFarmViewport = (nextFarm: FarmArea | null) => {
     const map = mapRef.current?.getMap()
@@ -186,10 +223,14 @@ function SolarPannelMap() {
     syncFarmPanBounds(nextFarm)
   }
 
-  const findPanelIdAtEvent = (event: MapMouseEvent | MapLayerMouseEvent) => {
-    const features = mapRef.current?.queryRenderedFeatures(event.point, { layers: ['solar-panels-fill'] }) ?? []
-    const panelFeature = features[0] as MapGeoJSONFeature | undefined
-    return typeof panelFeature?.properties?.id === 'string' ? panelFeature.properties.id : null
+  const findGridCellIdAtEvent = (event: MapMouseEvent) => {
+    const features = mapRef.current?.queryRenderedFeatures(event.point, { layers: ['farm-grid-fill'] }) ?? []
+    const cellFeature = features[0] as MapGeoJSONFeature | undefined
+    return typeof cellFeature?.properties?.id === 'string' ? cellFeature.properties.id : null
+  }
+
+  const getGridCellById = (gridCellId: string): GridCell | null => {
+    return farmGridCells.find((cell) => cell.id === gridCellId) ?? null
   }
 
   const resetDraftFarm = () => {
@@ -199,12 +240,11 @@ function SolarPannelMap() {
 
   const clearFarmPlanner = (notice: string | null = null) => {
     setFarmArea(null)
-    setPanels([])
-    setSelectedPanelId(null)
     setIsSelectingFarm(false)
     setIsOnboardingOpen(false)
     resetSearch()
     resetDraftFarm()
+    registerGridCells([])
     setPlannerNotice(notice)
   }
 
@@ -219,25 +259,34 @@ function SolarPannelMap() {
 
   const startFarmSelection = () => {
     setFarmArea(null)
-    setPanels([])
-    setSelectedPanelId(null)
-    setDraggingPanelId(null)
     setFarmPanBounds(undefined)
     resetDraftFarm()
+    registerGridCells([])
     setPlannerNotice('Click first corner.')
     setIsOnboardingOpen(false)
     setIsSelectingFarm(true)
   }
 
   const handleMapClick = (event: MapMouseEvent) => {
-    const panelId = findPanelIdAtEvent(event)
-    if (panelId && !isSelectingFarm) {
-      setSelectedPanelId(panelId)
-      return
-    }
-
     if (!isSelectingFarm) {
-      setSelectedPanelId(null)
+      const gridCellId = findGridCellIdAtEvent(event)
+      if (!gridCellId) {
+        return
+      }
+
+      const nextGridCell = getGridCellById(gridCellId)
+      if (!nextGridCell) {
+        return
+      }
+
+      openGridCellModal({
+        id: nextGridCell.id,
+        row: nextGridCell.row,
+        column: nextGridCell.column,
+        latitude: nextGridCell.centerLatitude,
+        longitude: nextGridCell.centerLongitude,
+      })
+      setPlannerNotice(null)
       return
     }
 
@@ -251,12 +300,10 @@ function SolarPannelMap() {
 
     const nextFarm = createFarmArea(draftStart, coordinate, addressQuery.trim() || 'Saved farm')
     setFarmArea(nextFarm)
-    setPanels([])
-    setSelectedPanelId(null)
     setIsSelectingFarm(false)
     setIsOnboardingOpen(false)
     resetDraftFarm()
-    setPlannerNotice('Farm saved. Double-click inside to place panels.')
+    setPlannerNotice(null)
     fitMapToFarm(nextFarm)
   }
 
@@ -264,112 +311,65 @@ function SolarPannelMap() {
     setViewState((currentViewState) => ({
       ...event.viewState,
       zoom: farmMinZoom ? Math.max(event.viewState.zoom, farmMinZoom) : event.viewState.zoom,
+      pitch: 0,
+      bearing: 0,
       padding: currentViewState.padding,
     }))
   }
 
   const handleMapPointerMove = (event: MapMouseEvent) => {
-    if (draggingPanelId && farmArea) {
-      const coordinate = clampCoordinateToFarm(farmArea, { latitude: event.lngLat.lat, longitude: event.lngLat.lng })
-      setPanels((currentPanels) =>
-        currentPanels.map((panel) =>
-          panel.id === draggingPanelId ? { ...panel, latitude: coordinate.latitude, longitude: coordinate.longitude } : panel,
-        ),
-      )
+    if (isSelectingFarm && draftStart) {
+      setDraftCorner({ latitude: event.lngLat.lat, longitude: event.lngLat.lng })
       return
     }
 
     if (!isSelectingFarm) {
-      setIsHoveringPanel(Boolean(findPanelIdAtEvent(event)))
+      setIsHoveringGridCell(Boolean(findGridCellIdAtEvent(event)))
     }
-
-    if (!isSelectingFarm || !draftStart) {
-      return
-    }
-
-    setDraftCorner({ latitude: event.lngLat.lat, longitude: event.lngLat.lng })
   }
 
   const handleMapMouseLeave = () => {
-    setIsHoveringPanel(false)
-    setDraggingPanelId(null)
+    setIsHoveringGridCell(false)
   }
 
-  const handleMapDoubleClick = (event: MapMouseEvent) => {
-    if (isSelectingFarm) {
-      return
-    }
-
-    if (!farmArea) {
-      setPlannerNotice('Save a farm boundary before placing panels.')
-      return
-    }
-
-    const coordinate = { latitude: event.lngLat.lat, longitude: event.lngLat.lng }
-    if (!isCoordinateInsideFarm(farmArea, coordinate)) {
-      setPlannerNotice('Panels can only be placed inside the saved farm boundary.')
-      return
-    }
-
-    const newPanel: SolarPanel = {
-      id: `panel-${nextPanelNumber}`,
-      latitude: coordinate.latitude,
-      longitude: coordinate.longitude,
-      rotation: Number(viewState.bearing.toFixed(1)),
-    }
-
-    setPanels((currentPanels) => [...currentPanels, newPanel])
-    setSelectedPanelId(newPanel.id)
-    setNextPanelNumber((currentNumber) => currentNumber + 1)
-    setPlannerNotice(null)
-  }
-
-  const handlePanelMouseDown = (event: MapLayerMouseEvent) => {
-    if (isSelectingFarm) {
-      return
-    }
-
-    const panelId = findPanelIdAtEvent(event)
-    if (!panelId) {
-      return
-    }
-
-    event.preventDefault()
-    setDraggingPanelId(panelId)
-    setSelectedPanelId(panelId)
-  }
-
-  const handlePanelMouseUp = () => {
-    setDraggingPanelId(null)
-  }
-
-  const handleDeletePanel = () => {
-    if (!selectedPanel) {
-      return
-    }
-
-    setPanels((currentPanels) => currentPanels.filter((panel) => panel.id !== selectedPanel.id))
-    setSelectedPanelId(null)
-  }
-
-  const panelDimensionsLabel = `${panelDimensions.lengthMeters}m x ${panelDimensions.widthMeters}m`
-  const farmLabel = farmCenter ? `Lat ${formatCoordinate(farmCenter.latitude)}\nLng ${formatCoordinate(farmCenter.longitude)}` : null
-  const selectedPanelSummary = selectedPanel
+  const selectedGridCellSummary = selectedGridCell
     ? {
-        id: selectedPanel.id,
-        latitude: formatCoordinate(selectedPanel.latitude),
-        longitude: formatCoordinate(selectedPanel.longitude),
-        rotation: `${selectedPanel.rotation.toFixed(1)} deg`,
-        size: panelDimensionsLabel,
+        id: selectedGridCell.id,
+        row: selectedGridCell.row,
+        column: selectedGridCell.column,
+        latitude: formatCoordinate(selectedGridCell.latitude),
+        longitude: formatCoordinate(selectedGridCell.longitude),
+        content: gridCellContent[selectedGridCell.id] ?? 'empty',
+        panel: selectedGridCellPanel ? `${selectedGridCellPanel.name} (${selectedGridCellPanel.type})` : 'None',
+      }
+    : null
+
+  const selectedGridCellPanelMetrics = selectedGridCellPanel ? panelMetricsById[selectedGridCellPanel.id] : null
+
+  const selectedCellMapGeometry = selectedGridCell ? getGridCellById(selectedGridCell.id) : null
+  const farmCenterLabel = farmCenter
+    ? {
+        latitude: formatCoordinate(farmCenter.latitude),
+        longitude: formatCoordinate(farmCenter.longitude),
       }
     : null
 
   return (
-    <div className="solar-pannel-map solar-pannel-map--workspace">
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: { xs: '1fr', md: '280px minmax(0, 1fr)' },
+        gridTemplateRows: { xs: 'auto minmax(0, 1fr)', md: 'minmax(0, 1fr)' },
+        height: '100%',
+        minHeight: 0,
+        borderTop: `1px solid ${dashboardPalette.border}`,
+        background: dashboardPalette.shell,
+      }}
+    >
       <SolarPannelPlannerControls
         plannerNotice={plannerNotice}
-        farmName={farmLabel}
-        selectedPanel={selectedPanelSummary}
+        farmCenter={farmCenterLabel}
+        selectedGridCell={selectedGridCellSummary}
         addressQuery={addressQuery}
         addressResults={addressResults}
         isOnboardingOpen={isOnboardingOpen}
@@ -379,43 +379,48 @@ function SolarPannelMap() {
         onOpenOnboarding={openOnboarding}
         onCloseOnboarding={closeOnboarding}
         onResetFarm={() => clearFarmPlanner(null)}
-        onDeleteSelectedPanel={handleDeletePanel}
         onStartDrawingBoundary={startFarmSelection}
         onSearchSubmit={handleAddressSubmit}
         onAddressChange={handleAddressChange}
         onSearchFocus={handleSearchFocus}
         onSearchBlur={handleSearchBlur}
         onSelectAddress={selectAddress}
+        selectedGridCellPanel={selectedGridCellPanel}
+        selectedGridCellPanelMetrics={selectedGridCellPanelMetrics}
+        onAssignRealPanel={addRealPanelToSelectedCell}
+        onAssignFakePanel={addFakePanelToSelectedCell}
+        onClearSelectedGridCellPanel={clearSelectedGridCellPanel}
+        onSetPanelMode={setPanelMode}
       />
 
-      <div className="solar-pannel-map__canvas">
+      <Box sx={{ position: 'relative', minHeight: 0, height: '100%', background: dashboardPalette.shell }}>
         <Map
           {...viewState}
           ref={mapRef}
+          style={{ width: '100%', height: '100%' }}
           reuseMaps
-          dragPan={!draggingPanelId}
+          dragRotate={false}
+          pitchWithRotate={false}
+          touchZoomRotate={false}
           doubleClickZoom={false}
           mapLib={import('maplibre-gl')}
           mapStyle={birdseyeMapStyle}
           minZoom={farmMinZoom}
           maxBounds={farmPanBounds}
           onClick={handleMapClick}
-          onDblClick={handleMapDoubleClick}
           onLoad={() => {
             syncFarmViewport(farmArea)
             syncFarmPanBounds(farmArea)
           }}
-          onMouseDown={handlePanelMouseDown}
           onMouseMove={handleMapPointerMove}
           onMove={handleMapMove}
-          onMouseUp={handlePanelMouseUp}
           onMouseLeave={handleMapMouseLeave}
           onResize={() => {
             syncFarmViewport(farmArea)
             syncFarmPanBounds(farmArea)
           }}
         >
-          <NavigationControl position="top-right" visualizePitch />
+          <NavigationControl position="top-right" showCompass={false} />
 
           {farmArea && (
             <Source id="saved-farm" type="geojson" data={createFarmFeatureCollection(farmArea)}>
@@ -430,23 +435,23 @@ function SolarPannelMap() {
             </Source>
           )}
 
-          <Source id="solar-panels" type="geojson" data={createPanelFeatureCollection(panels)}>
-            <Layer {...solarPanelFillLayer} />
-            <Layer {...solarPanelOutlineLayer} />
-          </Source>
+          {farmGridCells.length > 0 && (
+            <Source id="farm-grid" type="geojson" data={farmGridFeatureCollection}>
+              <Layer {...farmGridFillLayer} />
+              <Layer {...farmGridOutlineLayer} />
+            </Source>
+          )}
 
-          {selectedPanel && (
-            <>
-              <Source id="selected-solar-panel" type="geojson" data={createPanelFeatureCollection([selectedPanel])}>
-                <Layer {...selectedSolarPanelGlowLayer} />
-                <Layer {...selectedSolarPanelFillLayer} />
-                <Layer {...selectedSolarPanelOutlineLayer} />
-              </Source>
-            </>
+          {selectedCellMapGeometry && (
+            <Source id="selected-grid-cell" type="geojson" data={createSelectedGridCellFeatureCollection(selectedCellMapGeometry)}>
+              <Layer {...selectedGridCellFillLayer} />
+              <Layer {...selectedGridCellGlowLayer} />
+              <Layer {...selectedGridCellOutlineLayer} />
+            </Source>
           )}
         </Map>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

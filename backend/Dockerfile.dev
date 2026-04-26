@@ -1,0 +1,9 @@
+FROM maven:3.9.11-eclipse-temurin-25-alpine
+
+WORKDIR /workspace
+
+COPY pom.xml .
+
+RUN mvn dependency:go-offline -B
+
+CMD ["mvn", "spring-boot:run"]

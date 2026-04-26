@@ -8,7 +8,7 @@ type NotificationListProps = {
   alerts: DashboardAlert[]
   onAcknowledge: (alertId: string) => void
   onOpenPanelDetails: (panelId: string) => void
-  onSetPanelMode: (panelId: string, mode: PanelMode) => void
+  onSetPanelMode: (panelId: string, mode: PanelMode) => Promise<void>
 }
 
 /** Renders simulation notifications with recommended actions. */
@@ -100,7 +100,7 @@ function NotificationList({ alerts, onAcknowledge, onOpenPanelDetails, onSetPane
                   variant="contained"
                   color="secondary"
                   startIcon={<FaSliders size={10} />}
-                  onClick={() => onSetPanelMode(alert.panelId, alert.recommendedMode)}
+                  onClick={() => void onSetPanelMode(alert.panelId, alert.recommendedMode)}
                   sx={{ minHeight: 28, px: 0.85, fontSize: '0.76rem' }}
                 >
                   Set mode

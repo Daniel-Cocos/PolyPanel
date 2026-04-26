@@ -55,7 +55,7 @@ function PanelDetailsModal() {
       return
     }
 
-    setPanelMode(selectedModalPanel.id, mode)
+    void setPanelMode(selectedModalPanel.id, mode)
   }
 
   const handleAddRealPanel = () => {

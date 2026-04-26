@@ -57,12 +57,12 @@ def connect_arduino():
 
 def send_to_arduino(arduino_serial, mode):
     if arduino_serial is None:
-        print("No Arduino connected — skipping serial write.")
+        print("No Arduino connected, skipping serial write.")
         return
 
     command = MODE_MAP.get(mode)
     if command is None:
-        print(f"ERROR: Unknown mode {mode}, cannot send to Arduino.")
+        print(f"ERROR: Unknown mode {mode}, cannot send to Arduino")
         return
 
     arduino_serial.write(command.encode("utf-8"))
@@ -133,7 +133,7 @@ def start_consuming(channel, arduino_serial):
 def main():
     arduino_serial = connect_arduino()
     connection = connect_rabbitmq()
-    print("Connected to rabbitMQ")
+    print("Connected to RabbitMQ")
     start_consuming(connection.channel(), arduino_serial)
 
 

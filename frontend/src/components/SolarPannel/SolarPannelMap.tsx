@@ -1,5 +1,6 @@
+import { Box, IconButton, Stack, Typography } from '@mui/material'
+import { FaRotateLeft, FaRotateRight } from 'react-icons/fa6'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Box } from '@mui/material'
 import Map, {
   Layer,
   NavigationControl,
@@ -8,7 +9,6 @@ import Map, {
   type MapMouseEvent,
   type MapRef,
   type ViewState,
-  type ViewStateChangeEvent,
 } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import {
@@ -85,6 +85,26 @@ function SolarPannelMap() {
   const [isSelectingFarm, setIsSelectingFarm] = useState(false)
   const [isHoveringGridCell, setIsHoveringGridCell] = useState(false)
   const [plannerNotice, setPlannerNotice] = useState<string | null>(null)
+  const [rotationDirection, setRotationDirection] = useState<number | null>(null)
+
+  const rotateMap = (degrees: number) => {
+    const map = mapRef.current?.getMap()
+    if (!map) {
+      return
+    }
+
+    const currentBearing = map.getBearing()
+    map.rotateTo(currentBearing + degrees)
+  }
+
+  useEffect(() => {
+    if (rotationDirection === null) {
+      return
+    }
+
+    const interval = setInterval(() => rotateMap(rotationDirection), 16)
+    return () => clearInterval(interval)
+  }, [rotationDirection])
 
   const {
     panelMetricsById,
@@ -94,7 +114,7 @@ function SolarPannelMap() {
     openGridCellModal,
     registerGridCells,
     addRealPanelToSelectedCell,
-    addFakePanelToSelectedCell,
+    addProposedPanelToSelectedCell,
     clearSelectedGridCellPanel,
     setPanelMode,
   } = useDashboardState()
@@ -307,15 +327,6 @@ function SolarPannelMap() {
     fitMapToFarm(nextFarm)
   }
 
-  const handleMapMove = (event: ViewStateChangeEvent) => {
-    setViewState((currentViewState) => ({
-      ...event.viewState,
-      zoom: farmMinZoom ? Math.max(event.viewState.zoom, farmMinZoom) : event.viewState.zoom,
-      pitch: 0,
-      bearing: 0,
-      padding: currentViewState.padding,
-    }))
-  }
 
   const handleMapPointerMove = (event: MapMouseEvent) => {
     if (isSelectingFarm && draftStart) {
@@ -388,20 +399,86 @@ function SolarPannelMap() {
         selectedGridCellPanel={selectedGridCellPanel}
         selectedGridCellPanelMetrics={selectedGridCellPanelMetrics}
         onAssignRealPanel={addRealPanelToSelectedCell}
-        onAssignFakePanel={addFakePanelToSelectedCell}
+        onAssignProposedPanel={addProposedPanelToSelectedCell}
         onClearSelectedGridCellPanel={clearSelectedGridCellPanel}
         onSetPanelMode={setPanelMode}
       />
 
       <Box sx={{ position: 'relative', minHeight: 0, height: '100%', background: dashboardPalette.shell }}>
+        <Stack
+          direction="row"
+          spacing={0.6}
+          sx={{
+            position: 'absolute',
+            top: 12,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            alignItems: 'center',
+          }}
+        >
+          <IconButton
+            size="small"
+            onMouseDown={() => setRotationDirection(-5)}
+            onMouseUp={() => setRotationDirection(null)}
+            onMouseLeave={() => setRotationDirection(null)}
+            sx={{
+              width: 36,
+              height: 36,
+              border: `1px solid ${dashboardPalette.border}`,
+              bgcolor: 'rgba(6,20,30,0.85)',
+              color: dashboardPalette.text,
+              backdropFilter: 'blur(4px)',
+              '&:hover': { bgcolor: 'rgba(73,200,137,0.18)' },
+            }}
+            aria-label="Rotate map left 5 degrees"
+          >
+            <FaRotateLeft size={14} />
+          </IconButton>
+          <Typography
+            sx={{
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              color: dashboardPalette.text,
+              bgcolor: 'rgba(6,20,30,0.85)',
+              px: 0.6,
+              py: 0.2,
+              borderRadius: '3px',
+              border: `1px solid ${dashboardPalette.border}`,
+              minWidth: 42,
+              textAlign: 'center',
+            }}
+          >
+            {Math.round(viewState.bearing)}°
+          </Typography>
+          <IconButton
+            size="small"
+            onMouseDown={() => setRotationDirection(5)}
+            onMouseUp={() => setRotationDirection(null)}
+            onMouseLeave={() => setRotationDirection(null)}
+            sx={{
+              width: 36,
+              height: 36,
+              border: `1px solid ${dashboardPalette.border}`,
+              bgcolor: 'rgba(6,20,30,0.85)',
+              color: dashboardPalette.text,
+              backdropFilter: 'blur(4px)',
+              '&:hover': { bgcolor: 'rgba(73,200,137,0.18)' },
+            }}
+            aria-label="Rotate map right 5 degrees"
+          >
+            <FaRotateRight size={14} />
+          </IconButton>
+        </Stack>
+
         <Map
           {...viewState}
           ref={mapRef}
           style={{ width: '100%', height: '100%' }}
           reuseMaps
-          dragRotate={false}
-          pitchWithRotate={false}
-          touchZoomRotate={false}
+          dragRotate={true}
+          pitchWithRotate={true}
+          touchZoomRotate={true}
           doubleClickZoom={false}
           mapLib={import('maplibre-gl')}
           mapStyle={birdseyeMapStyle}
@@ -413,7 +490,15 @@ function SolarPannelMap() {
             syncFarmPanBounds(farmArea)
           }}
           onMouseMove={handleMapPointerMove}
-          onMove={handleMapMove}
+          onMove={(event) => {
+            setViewState((currentViewState) => ({
+              ...event.viewState,
+              zoom: farmMinZoom ? Math.max(event.viewState.zoom, farmMinZoom) : event.viewState.zoom,
+              pitch: event.viewState.pitch,
+              bearing: event.viewState.bearing,
+              padding: currentViewState.padding,
+            }))
+          }}
           onMouseLeave={handleMapMouseLeave}
           onResize={() => {
             syncFarmViewport(farmArea)

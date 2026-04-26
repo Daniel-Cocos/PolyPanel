@@ -38,7 +38,7 @@ type SolarPannelPlannerControlsProps = {
     column: number
     latitude: string
     longitude: string
-    content: 'empty' | 'real-panel' | 'fake-panel'
+    content: 'empty' | 'real-panel' | 'proposed-panel'
     panel: string
   } | null
   selectedGridCellPanel: Panel | null
@@ -59,7 +59,7 @@ type SolarPannelPlannerControlsProps = {
   onSearchBlur: () => void
   onSelectAddress: (result: AddressSuggestion) => void
   onAssignRealPanel: (panelId: string) => Promise<PanelActionResult>
-  onAssignFakePanel: () => PanelActionResult
+  onAssignProposedPanel: () => PanelActionResult
   onClearSelectedGridCellPanel: () => void
   onSetPanelMode: (panelId: string, mode: PanelMode) => void
 }
@@ -162,7 +162,7 @@ function SolarPannelPlannerControls({
   onSearchBlur,
   onSelectAddress,
   onAssignRealPanel,
-  onAssignFakePanel,
+  onAssignProposedPanel,
   onClearSelectedGridCellPanel,
   onSetPanelMode,
 }: SolarPannelPlannerControlsProps) {
@@ -186,8 +186,8 @@ function SolarPannelPlannerControls({
     }
   }
 
-  const handleAssignFakePanel = () => {
-    const actionResult = onAssignFakePanel()
+  const handleAssignProposedPanel = () => {
+    const actionResult = onAssignProposedPanel()
     setPanelActionMessage(actionResult.ok ? '' : actionResult.message)
   }
 
@@ -214,11 +214,26 @@ function SolarPannelPlannerControls({
         overflowY: 'auto',
       }}
     >
-      <Box sx={{ py: 0.25, display: 'flex', justifyContent: 'space-between', gap: 1, alignItems: 'flex-start' }}>
+      <Box sx={{ py: 0.25, display: 'flex', gap: 1, alignItems: 'center' }}>
         {!farmCenter && !isSelectingFarm && (
           <>
-            <Typography sx={{ color: dashboardPalette.muted, alignSelf: 'center' }}>No farm selected</Typography>
-            <IconButton size="small" onClick={onOpenOnboarding} aria-label="Add farm" sx={{ color: dashboardPalette.text, bgcolor: dashboardPalette.accent, '&:hover': { bgcolor: dashboardPalette.accentDark } }}>
+            <Typography sx={{ color: dashboardPalette.muted, minWidth: 0, flexGrow: 1 }}>No farm selected</Typography>
+            <IconButton
+              size="small"
+              onClick={onOpenOnboarding}
+              aria-label="Add farm"
+              sx={{
+                color: dashboardPalette.text,
+                bgcolor: dashboardPalette.accent,
+                '&:hover': { bgcolor: dashboardPalette.accentDark },
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                p: 0,
+                lineHeight: 1,
+                flexShrink: 0,
+              }}
+            >
               +
             </IconButton>
           </>
@@ -252,7 +267,7 @@ function SolarPannelPlannerControls({
       {plannerNotice && <Typography sx={{ color: '#ffcf9e', fontSize: '0.92rem' }}>{plannerNotice}</Typography>}
 
       <Backdrop open={isOnboardingOpen} sx={{ zIndex: 1200, bgcolor: 'rgba(7,20,28,0.72)' }} onClick={onCloseOnboarding}>
-        <Paper sx={{ width: { xs: '92vw', sm: 360 }, p: 1.2, bgcolor: dashboardPalette.panel, border: `1px solid ${dashboardPalette.border}` }} onClick={(event) => event.stopPropagation()}>
+        <Paper sx={{ width: { xs: '92vw', sm: 360 }, p: 1.2, bgcolor: dashboardPalette.panel, marginLeft: "-10px"}} onClick={(event) => event.stopPropagation()}>
           <Typography variant="h6" sx={{ color: dashboardPalette.text, mb: 1 }}>Choose address</Typography>
           <Box component="form" onSubmit={onSearchSubmit} sx={{ display: 'grid', gap: 0.8 }}>
             <TextField
@@ -306,7 +321,7 @@ function SolarPannelPlannerControls({
               <Typography sx={{ ...secondaryValueSx, mt: 0.45 }}>
                 {selectedGridCellPanel?.type === 'real'
                   ? `Real panel${selectedGridCellPanel.realPanelId ? ` • ID ${selectedGridCellPanel.realPanelId}` : ''}`
-                  : 'Fake panel • Simulation only'}
+                  : 'Proposed panel • Simulation only'}
               </Typography>
             </Box>
           )}
@@ -320,7 +335,7 @@ function SolarPannelPlannerControls({
                 <Typography sx={actionCaptionSx}>Use this for planning and testing layouts before linking a physical unit.</Typography>
                 <Button
                   variant="outlined"
-                  onClick={handleAssignFakePanel}
+                  onClick={handleAssignProposedPanel}
                   disabled={isSavingPanel}
                   sx={{
                     ...controlButtonSx,
@@ -329,7 +344,7 @@ function SolarPannelPlannerControls({
                     '&:hover': { borderColor: dashboardPalette.accent, bgcolor: 'rgba(73,200,137,0.08)' },
                   }}
                 >
-                  Add fake panel
+                  Add proposed panel
                 </Button>
               </Box>
 

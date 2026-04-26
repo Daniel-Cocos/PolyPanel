@@ -1,6 +1,6 @@
 import type { FarmArea } from './farmArea'
 
-export type GridCellContent = 'empty' | 'real-panel' | 'fake-panel'
+export type GridCellContent = 'empty' | 'real-panel' | 'proposed-panel'
 
 export type GridCell = {
   id: string

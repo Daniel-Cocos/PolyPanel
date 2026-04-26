@@ -43,7 +43,7 @@ export type DashboardContextValue = {
   selectedModalPanel: Panel | null
   isPanelModalOpen: boolean
   gridCells: GridCellSelection[]
-  gridCellContent: Record<string, 'empty' | 'real-panel' | 'fake-panel'>
+  gridCellContent: Record<string, 'empty' | 'real-panel' | 'proposed-panel'>
   setSelectedTimelineIndex: (index: number) => void
   setPanelMode: (panelId: string, mode: PanelMode) => void
   acknowledgeAlert: (alertId: string) => void
@@ -52,7 +52,7 @@ export type DashboardContextValue = {
   closePanelModal: () => void
   registerGridCells: (cells: GridCellSelection[]) => void
   addRealPanelToSelectedCell: (realPanelId: string) => Promise<PanelActionResult>
-  addFakePanelToSelectedCell: () => PanelActionResult
+  addProposedPanelToSelectedCell: () => PanelActionResult
   assignSelectedCellWithPanelType: (panelType: PanelType) => void
   assignPanelToSelectedCell: (panelId: string) => void
   clearSelectedGridCellPanel: () => void
@@ -177,9 +177,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             return [cell.id, 'empty']
           }
 
-          return [cell.id, linkedPanel.type === 'real' ? 'real-panel' : 'fake-panel']
+          return [cell.id, linkedPanel.type === 'real' ? 'real-panel' : 'proposed-panel']
         }),
-      ) as Record<string, 'empty' | 'real-panel' | 'fake-panel'>,
+      ) as Record<string, 'empty' | 'real-panel' | 'proposed-panel'>,
     [gridCells, panels],
   )
 
@@ -225,23 +225,23 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     setIsPanelModalOpen(false)
   }
 
-  const addFakePanelToSelectedCell = () => {
+  const addProposedPanelToSelectedCell = () => {
     if (!selectedGridCell) {
       return { ok: false, message: 'No grid cell selected.' }
     }
 
-    const fakePanel: Panel = {
+    const proposedPanel: Panel = {
       id: createPanelId(),
-      name: `Fake ${selectedGridCell.id}`,
-      type: 'fake',
+      name: `Proposed ${selectedGridCell.id}`,
+      type: 'proposed',
       realPanelId: null,
       mode: 'letting_sun_in',
       linkedGridCellId: selectedGridCell.id,
     }
 
-    setPanels((currentPanels) => upsertCellPanel(currentPanels, fakePanel))
-    setFocusedPanelId(fakePanel.id)
-    return { ok: true, message: 'Fake panel linked.' }
+    setPanels((currentPanels) => upsertCellPanel(currentPanels, proposedPanel))
+    setFocusedPanelId(proposedPanel.id)
+    return { ok: true, message: 'Proposed panel linked.' }
   }
 
   const addRealPanelToSelectedCell = async (realPanelId: string) => {
@@ -273,8 +273,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   }
 
   const assignSelectedCellWithPanelType = (panelType: PanelType) => {
-    if (panelType === 'fake') {
-      addFakePanelToSelectedCell()
+    if (panelType === 'proposed') {
+      addProposedPanelToSelectedCell()
     }
   }
 
@@ -351,7 +351,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     closePanelModal,
     registerGridCells,
     addRealPanelToSelectedCell,
-    addFakePanelToSelectedCell,
+    addProposedPanelToSelectedCell,
     assignSelectedCellWithPanelType,
     assignPanelToSelectedCell,
     clearSelectedGridCellPanel,

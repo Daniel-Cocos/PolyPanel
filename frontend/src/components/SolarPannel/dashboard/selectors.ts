@@ -65,7 +65,7 @@ function getBasePanelMetrics(panel: Panel, point: WeatherTimelinePoint): PanelMe
   const humidityBias = ((hash % 13) - 6) * 1.1
   const soilRetention = 0.82 + (hash % 6) * 0.06
   const energyFactor = 0.92 + (hash % 7) * 0.05
-  const panelOutputScale = panel.type === 'fake' ? 10.4 : 10.9
+  const panelOutputScale = panel.type === 'proposed' ? 10.4 : 10.9
 
   return {
     tempC: Number(

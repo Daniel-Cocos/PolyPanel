@@ -24,9 +24,11 @@
 
 - `src/` application source
 - `src/main.tsx` React entry point; wires `ThemeProvider`, `CssBaseline`, and `BrowserRouter`
-- `src/App.tsx` route entry; currently routes all traffic to the landing page
+- `src/App.tsx` route entry for landing and dashboard paths
 - `src/pages/` top-level page composition modules
 - `src/components/LandingPage/` landing-page sections, shared reveal helper, and GSAP hook
+- `src/components/SolarPannel/` dashboard map planner and simulation modules
+- `src/components/SolarPannel/dashboard/` year-long weather-driven simulation domain, inline cell editor/sidebar UI, registry service boundary, and report helpers
 - `src/lib/` shared library setup; currently GSAP plugin registration
 - `src/assets/` static images bundled by Vite
 - `public/` static public assets

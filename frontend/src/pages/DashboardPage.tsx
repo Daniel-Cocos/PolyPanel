@@ -1,44 +1,109 @@
-import { Box, Button, Stack, Typography } from '@mui/material'
+import { Box, Button, Chip, Stack, Typography } from '@mui/material'
+import { FaArrowLeftLong, FaChartLine, FaSolarPanel } from 'react-icons/fa6'
 import { Link as RouterLink } from 'react-router-dom'
 import { SolarPannelMap } from '../components/SolarPannel'
+import DashboardSidebar from '../components/SolarPannel/dashboard/DashboardSidebar'
+import { DashboardProvider } from '../components/SolarPannel/dashboard/context'
+import { dashboardPalette } from '../components/SolarPannel/dashboard/styles'
 
 /** Renders the full-page solar planning workspace. */
 function DashboardPage() {
   return (
-    <Box component="main" sx={{ height: '100dvh', overflow: 'hidden', display: 'grid', gridTemplateRows: 'auto minmax(0, 1fr)', bgcolor: '#eef4f1' }}>
+    <Box
+      component="main"
+      sx={{
+        height: '100dvh',
+        overflow: 'hidden',
+        display: 'grid',
+        gridTemplateRows: 'auto minmax(0, 1fr)',
+        bgcolor: dashboardPalette.shell,
+      }}
+    >
       <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        spacing={2}
+        direction="row"
+        spacing={1.1}
         sx={{
           justifyContent: 'space-between',
-          alignItems: { xs: 'flex-start', sm: 'center' },
-          px: { xs: 2, md: 3 },
-          py: { xs: 2, md: 2.5 },
-          borderBottom: '1px solid rgba(20, 80, 109, 0.12)',
-          bgcolor: 'rgba(255,255,255,0.72)',
-          backdropFilter: 'blur(10px)',
+          alignItems: 'center',
+          px: { xs: 1.25, md: 1.8 },
+          py: { xs: 1, md: 1.15 },
+          borderBottom: `1px solid ${dashboardPalette.border}`,
+          bgcolor: dashboardPalette.panelSoft,
+          backdropFilter: 'blur(14px)',
         }}
       >
-        <Box sx={{ minWidth: 0 }}>
-          <Typography sx={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: '#2f5a53' }}>
-            PolyPanel
-          </Typography>
-          <Typography variant="h4" sx={{ mt: 0.5, color: '#08241f' }}>
-            Solar Layout Planner
-          </Typography>
-          <Typography sx={{ mt: 0.5, maxWidth: '62ch', color: 'rgba(8,36,31,0.72)' }}>
-            Select a farm, lock the workspace to its boundary, and plan panel placement inside that area.
-          </Typography>
-        </Box>
+        <Stack direction="row" spacing={0.8} sx={{ alignItems: 'center', minWidth: 0 }}>
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              borderRadius: '3px',
+              display: 'grid',
+              placeItems: 'center',
+              color: dashboardPalette.text,
+              border: `1px solid ${dashboardPalette.border}`,
+              bgcolor: 'rgba(255,255,255,0.04)',
+              flexShrink: 0,
+            }}
+          >
+            <FaSolarPanel size={14} />
+          </Box>
 
-        <Button component={RouterLink} to="/" variant="outlined" sx={{ width: { xs: '100%', sm: 'auto' }, borderColor: 'rgba(20, 80, 109, 0.18)', color: '#14506d' }}>
-          Back to landing page
+          <Stack spacing={0.2} sx={{ minWidth: 0 }}>
+            <Typography sx={{ color: dashboardPalette.text, fontWeight: 700, fontSize: '0.95rem', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Solar Layout Planner
+            </Typography>
+            <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+              <Chip label="PolyPanel" size="small" sx={{ height: 20, bgcolor: 'rgba(73,200,137,0.2)', color: dashboardPalette.accent, fontWeight: 700, '& .MuiChip-label': { px: 0.8 } }} />
+              <Chip
+                icon={<FaChartLine size={10} />}
+                label="Live simulation"
+                size="small"
+                sx={{
+                  height: 20,
+                  bgcolor: 'rgba(255,255,255,0.08)',
+                  color: dashboardPalette.muted,
+                  '& .MuiChip-icon': { color: dashboardPalette.accent, ml: 0.7 },
+                  '& .MuiChip-label': { px: 0.7 },
+                }}
+              />
+            </Stack>
+          </Stack>
+        </Stack>
+
+        <Button
+          component={RouterLink}
+          to="/"
+          variant="outlined"
+          startIcon={<FaArrowLeftLong size={12} />}
+          sx={{
+            minHeight: 34,
+            px: { xs: 0.9, md: 1.2 },
+            borderColor: dashboardPalette.border,
+            color: dashboardPalette.text,
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            '&:hover': { borderColor: 'rgba(255,255,255,0.36)', bgcolor: 'rgba(255,255,255,0.04)' },
+          }}
+        >
+          Landing page
         </Button>
       </Stack>
 
-      <Box sx={{ minHeight: 0, overflow: 'hidden' }}>
-        <SolarPannelMap />
-      </Box>
+      <DashboardProvider>
+        <Box
+          sx={{
+            minHeight: 0,
+            overflow: 'hidden',
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1fr) 360px' },
+            gridTemplateRows: { xs: 'minmax(0, 1fr) auto', lg: 'minmax(0, 1fr)' },
+          }}
+        >
+          <SolarPannelMap />
+          <DashboardSidebar />
+        </Box>
+      </DashboardProvider>
     </Box>
   )
 }

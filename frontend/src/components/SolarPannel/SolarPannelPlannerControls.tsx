@@ -27,6 +27,7 @@ import {
   FaTrash,
 } from 'react-icons/fa6'
 import { dashboardPalette } from './dashboard/styles'
+import { FIXED_LIVE_PANEL_CELL_ID } from './dashboard/fixedLivePanel'
 import type { Panel, PanelActionResult, PanelMetrics, PanelMode } from './dashboard/types'
 
 type SolarPannelPlannerControlsProps = {
@@ -61,7 +62,7 @@ type SolarPannelPlannerControlsProps = {
   onAssignRealPanel: (panelId: string) => Promise<PanelActionResult>
   onAssignProposedPanel: () => PanelActionResult
   onClearSelectedGridCellPanel: () => void
-  onSetPanelMode: (panelId: string, mode: PanelMode) => void
+  onSetPanelMode: (panelId: string, mode: PanelMode) => Promise<void>
 }
 
 const sectionTitleSx = {
@@ -169,6 +170,7 @@ function SolarPannelPlannerControls({
   const [realPanelIdInput, setRealPanelIdInput] = useState('')
   const [isSavingPanel, setIsSavingPanel] = useState(false)
   const [panelActionMessage, setPanelActionMessage] = useState('')
+  const isFixedLivePanelCell = selectedGridCell?.id === FIXED_LIVE_PANEL_CELL_ID
 
   const handleAssignRealPanel = async () => {
     const normalizedPanelId = realPanelIdInput.trim()
@@ -196,7 +198,7 @@ function SolarPannelPlannerControls({
       return
     }
 
-    onSetPanelMode(selectedGridCellPanel.id, event.target.value as PanelMode)
+    void onSetPanelMode(selectedGridCellPanel.id, event.target.value as PanelMode)
   }
 
   return (
@@ -309,9 +311,15 @@ function SolarPannelPlannerControls({
 
           <Divider sx={sectionDividerSx} />
 
-          {selectedGridCell.content === 'empty' && (
+          {selectedGridCell.content === 'empty' && !isFixedLivePanelCell && (
             <Typography sx={{ color: dashboardPalette.accent, fontWeight: 700, fontSize: '0.86rem', lineHeight: 1.25, display: 'inline-flex', alignItems: 'center', gap: 0.6 }}>
               <FaCircleInfo size={12} />No information available
+            </Typography>
+          )}
+
+          {selectedGridCell.content === 'empty' && isFixedLivePanelCell && (
+            <Typography sx={{ color: dashboardPalette.accent, fontWeight: 700, fontSize: '0.86rem', lineHeight: 1.25, display: 'inline-flex', alignItems: 'center', gap: 0.6 }}>
+              <FaCircleInfo size={12} />Cell 1,1 is reserved for the live panel
             </Typography>
           )}
 
@@ -328,7 +336,7 @@ function SolarPannelPlannerControls({
 
           {selectedGridCell.content !== 'empty' && <Divider sx={sectionDividerSx} />}
 
-          {selectedGridCell.content === 'empty' && (
+          {selectedGridCell.content === 'empty' && !isFixedLivePanelCell && (
             <Stack spacing={0.8}>
               <Box sx={actionCardSx}>
                 <Typography sx={actionTitleSx}>Simulation panel</Typography>
@@ -424,10 +432,14 @@ function SolarPannelPlannerControls({
                 </>
               )}
 
-              <Divider sx={sectionDividerSx} />
-              <IconButton onClick={onClearSelectedGridCellPanel} aria-label="Remove panel from cell" sx={{ width: 40, height: 40, border: `1px solid ${dashboardPalette.border}`, color: dashboardPalette.muted }}>
-                <FaTrash size={15} />
-              </IconButton>
+              {!isFixedLivePanelCell && (
+                <>
+                  <Divider sx={sectionDividerSx} />
+                  <IconButton onClick={onClearSelectedGridCellPanel} aria-label="Remove panel from cell" sx={{ width: 40, height: 40, border: `1px solid ${dashboardPalette.border}`, color: dashboardPalette.muted }}>
+                    <FaTrash size={15} />
+                  </IconButton>
+                </>
+              )}
             </Stack>
           )}
         </Box>

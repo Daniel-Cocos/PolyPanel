@@ -3,6 +3,8 @@ import { getInitialPanels } from './mockData'
 import { downloadSimulationReport } from './report'
 import { buildSimulationTimeline } from './selectors'
 import DashboardContext from './dashboardContext'
+import { createFixedLivePanel, FIXED_LIVE_PANEL_CELL_ID, isFixedLivePanel } from './fixedLivePanel'
+import { syncLivePanelMode } from './livePanelModeApi'
 import { panelRegistryService } from './panelRegistryService'
 import type {
   DashboardAlert,
@@ -45,7 +47,7 @@ export type DashboardContextValue = {
   gridCells: GridCellSelection[]
   gridCellContent: Record<string, 'empty' | 'real-panel' | 'proposed-panel'>
   setSelectedTimelineIndex: (index: number) => void
-  setPanelMode: (panelId: string, mode: PanelMode) => void
+  setPanelMode: (panelId: string, mode: PanelMode) => Promise<void>
   acknowledgeAlert: (alertId: string) => void
   openGridCellModal: (cell: GridCellSelection) => void
   openPanelDetailsModal: (panelId: string) => void
@@ -80,9 +82,15 @@ function upsertCellPanel(panels: Panel[], panel: Panel) {
   return [...nextPanels, panel]
 }
 
+/** Ensures the hardcoded live panel is always present on cell (1,1). */
+function ensureFixedLivePanel(panels: Panel[]) {
+  const nextPanels = panels.filter((panel) => !isFixedLivePanel(panel.id) && panel.linkedGridCellId !== FIXED_LIVE_PANEL_CELL_ID)
+  return [...nextPanels, createFixedLivePanel()]
+}
+
 /** Provides shared simulation and planning state for dashboard features. */
 export function DashboardProvider({ children }: { children: ReactNode }) {
-  const [panels, setPanels] = useState(getInitialPanels)
+  const [panels, setPanels] = useState(() => ensureFixedLivePanel(getInitialPanels()))
   const [selectedTimelineIndex, setSelectedTimelineIndex] = useState(0)
   const [selectedGridCell, setSelectedGridCell] = useState<GridCellSelection | null>(null)
   const [focusedPanelId, setFocusedPanelId] = useState<string | null>(null)
@@ -196,7 +204,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     })
     const validCellIds = new Set(cells.map((cell) => cell.id))
     setPanels((currentPanels) => {
-      const nextPanels = currentPanels.filter((panel) => !panel.linkedGridCellId || validCellIds.has(panel.linkedGridCellId))
+      const nextPanels = ensureFixedLivePanel(
+        currentPanels.filter((panel) => !panel.linkedGridCellId || validCellIds.has(panel.linkedGridCellId)),
+      )
       return nextPanels.length === currentPanels.length ? currentPanels : nextPanels
     })
     setSelectedGridCell((currentCell) => (currentCell && validCellIds.has(currentCell.id) ? currentCell : null))
@@ -230,6 +240,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return { ok: false, message: 'No grid cell selected.' }
     }
 
+    if (selectedGridCell.id === FIXED_LIVE_PANEL_CELL_ID) {
+      return { ok: false, message: 'Cell 1,1 is reserved for the live panel.' }
+    }
+
     const proposedPanel: Panel = {
       id: createPanelId(),
       name: `Proposed ${selectedGridCell.id}`,
@@ -247,6 +261,10 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const addRealPanelToSelectedCell = async (realPanelId: string) => {
     if (!selectedGridCell) {
       return { ok: false, message: 'No grid cell selected.' }
+    }
+
+    if (selectedGridCell.id === FIXED_LIVE_PANEL_CELL_ID) {
+      return { ok: false, message: 'Cell 1,1 is reserved for the live panel.' }
     }
 
     const lookupResult = await panelRegistryService.lookupRealPanelById(realPanelId)
@@ -283,12 +301,26 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       return
     }
 
+    if (selectedGridCell.id === FIXED_LIVE_PANEL_CELL_ID) {
+      return
+    }
+
     setPanels((currentPanels) => currentPanels.filter((panel) => panel.linkedGridCellId !== selectedGridCell.id))
     setFocusedPanelId(null)
   }
 
-  const setPanelMode = (panelId: string, mode: PanelMode) => {
+  const setPanelMode = async (panelId: string, mode: PanelMode) => {
     setPanels((currentPanels) => currentPanels.map((panel) => (panel.id === panelId ? { ...panel, mode } : panel)))
+
+    if (!isFixedLivePanel(panelId)) {
+      return
+    }
+
+    try {
+      await syncLivePanelMode(mode)
+    } catch (error) {
+      console.error('Failed to sync live panel mode.', error)
+    }
   }
 
   const acknowledgeAlert = (alertId: string) => {

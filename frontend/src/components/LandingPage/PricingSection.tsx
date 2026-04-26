@@ -69,6 +69,10 @@ const pricingTiers: readonly PricingTier[] = [
       "Grid price optimisation dashboard",
     ],
     includedFeatures: [
+      "Farm map view",
+      "Live sensor dashboard",
+      "Weather alerts",
+      "Crop monitoring",
       "Satellite farm design tool",
       "Annual yield simulation (up to 5 farms)",
       "Basic planning report export",
@@ -89,6 +93,10 @@ const pricingTiers: readonly PricingTier[] = [
       "Multi-farm portfolio management",
     ],
     includedFeatures: [
+      "Farm map view",
+      "Live sensor dashboard",
+      "Weather alerts",
+      "Crop monitoring",
       "Satellite farm design tool",
       "Annual yield simulation (up to 5 farms)",
       "Basic planning report export",

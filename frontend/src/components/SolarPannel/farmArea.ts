@@ -26,15 +26,19 @@ type FarmFeatureCollection = {
 
 const SAVED_FARM_STORAGE_KEY = 'solar-pannel-saved-farm'
 
-/** Creates a normalized farm area from two corner coordinates. */
+/** Creates a square farm area from two corner coordinates. */
 export function createFarmArea(start: Coordinate, end: Coordinate, name: string): FarmArea {
+  const latSpan = Math.abs(end.latitude - start.latitude)
+  const lngSpan = Math.abs(end.longitude - start.longitude)
+  const span = Math.max(latSpan, lngSpan)
+
   return {
     id: 'saved-farm',
     name,
-    minLatitude: Math.min(start.latitude, end.latitude),
-    maxLatitude: Math.max(start.latitude, end.latitude),
-    minLongitude: Math.min(start.longitude, end.longitude),
-    maxLongitude: Math.max(start.longitude, end.longitude),
+    minLatitude: start.latitude,
+    maxLatitude: start.latitude + (end.latitude >= start.latitude ? span : -span),
+    minLongitude: start.longitude,
+    maxLongitude: start.longitude + (end.longitude >= start.longitude ? span : -span),
   }
 }
 

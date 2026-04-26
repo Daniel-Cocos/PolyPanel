@@ -218,7 +218,7 @@ function SolarPannelPlannerControls({
         {!farmCenter && !isSelectingFarm && (
           <>
             <Typography sx={{ color: dashboardPalette.muted, alignSelf: 'center' }}>No farm selected</Typography>
-            <IconButton size="small" onClick={onOpenOnboarding} aria-label="Add farm" sx={{ color: dashboardPalette.text, bgcolor: dashboardPalette.accent, '&:hover': { bgcolor: dashboardPalette.accentDark } }}>
+            <IconButton size="small" onClick={onOpenOnboarding} aria-label="Add farm" sx={{ color: dashboardPalette.text, bgcolor: dashboardPalette.accent, '&:hover': { bgcolor: dashboardPalette.accentDark }, width: 28, height: 28 }}>
               +
             </IconButton>
           </>
@@ -252,7 +252,7 @@ function SolarPannelPlannerControls({
       {plannerNotice && <Typography sx={{ color: '#ffcf9e', fontSize: '0.92rem' }}>{plannerNotice}</Typography>}
 
       <Backdrop open={isOnboardingOpen} sx={{ zIndex: 1200, bgcolor: 'rgba(7,20,28,0.72)' }} onClick={onCloseOnboarding}>
-        <Paper sx={{ width: { xs: '92vw', sm: 360 }, p: 1.2, bgcolor: dashboardPalette.panel, border: `1px solid ${dashboardPalette.border}` }} onClick={(event) => event.stopPropagation()}>
+        <Paper sx={{ width: { xs: '92vw', sm: 360 }, p: 1.2, bgcolor: dashboardPalette.panel, marginLeft: "-10px"}} onClick={(event) => event.stopPropagation()}>
           <Typography variant="h6" sx={{ color: dashboardPalette.text, mb: 1 }}>Choose address</Typography>
           <Box component="form" onSubmit={onSearchSubmit} sx={{ display: 'grid', gap: 0.8 }}>
             <TextField

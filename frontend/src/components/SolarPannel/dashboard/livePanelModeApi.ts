@@ -2,8 +2,8 @@ import axios from 'axios'
 import type { PanelMode } from './types'
 
 const livePanelModeIds: Record<PanelMode, number> = {
-  flat_down: 0,
-  sun_tracking: 1,
+  sun_tracking: 0,
+  flat_down: 1,
   letting_sun_in: 2,
 }
 

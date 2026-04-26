@@ -1,0 +1,18 @@
+[project]
+name = "python-worker"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Daniel-Cocos",email = "dev.danielcocos@gmail.com"}
+]
+requires-python = ">=3.13"
+dependencies = [
+    "serial (>=0.0.97,<0.0.98)",
+    "pika (>=1.3.2,<2.0.0)",
+    "pyserial (>=3.5,<4.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

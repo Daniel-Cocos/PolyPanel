@@ -26,20 +26,31 @@ type FarmFeatureCollection = {
 
 const SAVED_FARM_STORAGE_KEY = 'solar-pannel-saved-farm'
 
+/** Normalizes farm bounds so min/max coordinates always stay ordered. */
+function normalizeFarmAreaBounds(farmArea: FarmArea): FarmArea {
+  return {
+    ...farmArea,
+    minLatitude: Math.min(farmArea.minLatitude, farmArea.maxLatitude),
+    maxLatitude: Math.max(farmArea.minLatitude, farmArea.maxLatitude),
+    minLongitude: Math.min(farmArea.minLongitude, farmArea.maxLongitude),
+    maxLongitude: Math.max(farmArea.minLongitude, farmArea.maxLongitude),
+  }
+}
+
 /** Creates a square farm area from two corner coordinates. */
 export function createFarmArea(start: Coordinate, end: Coordinate, name: string): FarmArea {
   const latSpan = Math.abs(end.latitude - start.latitude)
   const lngSpan = Math.abs(end.longitude - start.longitude)
   const span = Math.max(latSpan, lngSpan)
 
-  return {
+  return normalizeFarmAreaBounds({
     id: 'saved-farm',
     name,
     minLatitude: start.latitude,
     maxLatitude: start.latitude + (end.latitude >= start.latitude ? span : -span),
     minLongitude: start.longitude,
     maxLongitude: start.longitude + (end.longitude >= start.longitude ? span : -span),
-  }
+  })
 }
 
 /** Returns the map center of a farm area. */
@@ -124,7 +135,7 @@ export function loadSavedFarmArea() {
       return null
     }
 
-    return parsed
+    return normalizeFarmAreaBounds(parsed)
   } catch {
     return null
   }

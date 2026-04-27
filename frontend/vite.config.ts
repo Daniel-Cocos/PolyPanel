@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig(() => ({
-  base: process.env.VITE_PUBLIC_BASE ?? '/GreenTech/',
+  base: process.env.VITE_PUBLIC_BASE ?? '/PolyPanel/',
   plugins: [react()],
   server: {
     proxy: {

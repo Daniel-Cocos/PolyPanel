@@ -1,8 +1,34 @@
-# PolyPannel
-PolyPannel backend runs locally with `docker compose up --build` and now exposes `GET /api/weather/timeline` for the dashboard's last-12-month weather history. That route pulls real historical data from Open-Meteo, accepts optional `latitude` and `longitude` query parameters, returns rainfall and solar-radiation inputs used by the frontend simulation, and falls back to configured defaults in `backend/src/main/resources/application.properties`. Run `make run` to always rebuild and start the full stack, or use `docker compose --profile full up --build` directly; the frontend is served at `http://localhost:5173/` with `/api` proxied to the backend. The Python worker now uses `pyserial` only and auto-detects common Arduino serial ports unless `ARDUINO_PORT` is set explicitly. The dashboard now uses a scrollable yearly simulation timeline and exports yearly weather-backed reports as JSON and CSV. The frontend is also deployed separately from `frontend/` with `npm run deploy`, which publishes only `frontend/dist` to the `gh-pages` branch for GitHub Pages hosting; set `VITE_API_BASE_URL` when the deployed frontend needs to reach a separately hosted backend. The landing page includes a responsive header that collapses to a hamburger menu on mobile.
+# PolyPanel
+
+> Sun tracking moving soloar panels
 
 ![Demo](assets/PolyPanel.gif)
 
-## Website
+**Live Demo:** [https://daniel-cocos.github.io/PolyPanel/](https://daniel-cocos.github.io/PolyPanel/)
 
-[https://daniel-cocos.github.io/PolyPanel/](https://daniel-cocos.github.io/PolyPanel/)
+
+## Quick Start
+
+```bash
+make run
+```
+
+## Architecture
+
+```
+┌--------------┐     ┌---------------┐     ┌----------┐      ┌--------┐      ┌---------┐
+│   Frontend   │<--->│    Backend    │<--->│ RabbitMQ │ <--->│ Python │ <--->│ Arduino │
+│  (React/Vite)│     │ (Spring Boot) │     └----------┘      │ Worker │      └---------┘
+└--------------┘     └-------┬-------┘                       └--------┘
+                             │
+                      ┌------------┐
+                      │ PostgreSQL │
+                      └------------┘
+```
+
+## Contributors
+[![GitHub](https://img.shields.io/badge/GitHub-Sonny_Pullen-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=24292f)](https://github.com/Sonny-Pullen)
+[![GitHub](https://img.shields.io/badge/GitHub-Aleksander_Tacconi-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=24292f)](https://github.com/Aleks-Tacconi)
+[![GitHub](https://img.shields.io/badge/GitHub-Daniel_Cocos-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=24292f)](https://github.com/Daniel-Cocos)
+
+
